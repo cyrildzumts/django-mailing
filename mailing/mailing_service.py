@@ -41,16 +41,16 @@ def update_campaign(campaign_uuid, postdata, files):
         return {'success': False, 'message': _('MailCampaign not found'), 'errors': str(e)}
     
 
-def generate_mail_campaign_html(campaign):
+def generate_mail_campaign_html(campaign, context):
     template_name = getattr(settings, MAILING_CONSTANTS.SETTINGS_DEFAULT_MAIL_TEMPLATE)
-    mail_html = render_to_string(template_name, {'campaign': campaign})
+    mail_html = render_to_string(template_name, context)
     with open(f"{campaign.slug}.html", 'w') as f:
         f.write(mail_html)
         logger.info(f" Mail Campaign {campaign.name} html file created")
         
-def send_mail_campaign(campaign):
+def send_mail_campaign(campaign, context):
     template_name = getattr(settings, MAILING_CONSTANTS.SETTINGS_DEFAULT_MAIL_TEMPLATE)
-    mail_html = render_to_string(template_name, {'campaign': campaign})
+    mail_html = render_to_string(template_name, context)
     
     
     

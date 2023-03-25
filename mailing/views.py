@@ -12,6 +12,7 @@ from mailing.models import MailCampaign
 from mailing.forms import MailCampaignForm
 from mailing import constants as MAILING_CONSTANTS
 from mailing import mailing_service
+from django.template import RequestContext
 from mailing.resources import ui_strings as UI_STRINGS
 import csv
 import logging
@@ -190,7 +191,7 @@ def campaign_generate_mail(request, campaign_uuid=None):
     campaign = get_object_or_404(MailCampaign,campaign_uuid=campaign_uuid)
     
     try:
-        mailing_service.generate_mail_campaign_html(campaign)
+        mailing_service.generate_mail_campaign_html(campaign, RequestContext(request, {'campaign': campaign}))
         messages.success(request, _('MailCampaign HTML not generated'))
     except Exception as e :
         messages.warning(request, _('MailCampaign HTML not generated'))
@@ -209,7 +210,7 @@ def campaign_generate_html(request, campaign_uuid=None):
     campaign = get_object_or_404(MailCampaign,campaign_uuid=campaign_uuid)
     
     try:
-        mailing_service.generate_mail_campaign_html(campaign)
+        mailing_service.generate_mail_campaign_html(campaign, RequestContext(request, {'campaign': campaign}))
         messages.success(request, _('MailCampaign HTML not generated'))
     except Exception as e :
         messages.warning(request, _('MailCampaign HTML not generated'))
