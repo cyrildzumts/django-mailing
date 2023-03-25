@@ -1,14 +1,8 @@
 {% extends BASE_TEMPLATE %}
 {% load i18n %}
-{% load catalog_tags %}
 
 
-{% block ACTIONS %}
-
-{% endblock ACTIONS %}
-
-
-{% block CONTENT_MAIN %}
+{% block CONTENT %}
 <div class="actions flex-left">
 {% if perms.mailing.add_mailcampaign %}
 <a class="margin" href="{% url 'mailing:campaign-create'%}"> <i class="fas fa-plus icon"></i><span>{% trans "New Campaign" %}</span></a>
@@ -45,4 +39,4 @@
         </div><!--End of grid-->
     </div><!--End mat-box-->
 </div>
-{% endblock CONTENT_MAIN %}
+{% endblock CONTENT %}

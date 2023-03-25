@@ -1,11 +1,7 @@
 {% extends BASE_TEMPLATE %}
 {% load i18n %}
-{% load catalog_tags %}
-{% block ACTIONS %}
 
-{% endblock ACTIONS %}
-
-{% block CONTENT_MAIN %}
+{% block CONTENT %}
 <div class="container">
     
         <form action="{% url 'mailing:campaigns-delete' %}" method="POST">{% csrf_token %}
@@ -48,4 +44,4 @@
     {% include "tags/pagination.html" with page_set=highlight_list %}
     
 </div>
-{% endblock CONTENT_MAIN %}
+{% endblock CONTENT %}

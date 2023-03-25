@@ -1,7 +1,7 @@
 {% extends BASE_TEMPLATE %}
 {% load i18n %}
 
-{% block CONTENT_MAIN %}
+{% block CONTENT %}
 
 <div class="actions flex-left">
     <a class="mat-button mat-button-default" href="{% url 'mailing:campaigns' %}"><i class="fas fa-list icon"></i><span>{% trans "Mail Campaigns" %}</span></a>
@@ -9,4 +9,4 @@
 <div class="container new-product-wrapper">
     {% include "tags/mail_campaign_creation_form.html" %}
 </div>
-{% endblock CONTENT_MAIN %}
+{% endblock CONTENT %}
