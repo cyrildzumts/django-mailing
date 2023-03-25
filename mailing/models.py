@@ -57,7 +57,7 @@ class MailCampaign(models.Model):
         return reverse("mailing:mail-campaign", kwargs={"slug": self.slug, "campaign_uuid": self.campaign_uuid})
     
     def get_dashboard_url(self):
-        return reverse("mailing:campaign-detail", kwargs={"campaign_uuid": self.campaign_uuid})
+        return reverse("mailing:campaign-detail", kwargs={"slug": self.slug, "campaign_uuid": self.campaign_uuid})
     
     def get_update_url(self):
         return reverse("mailing:campaign-update", kwargs={"slug": self.slug, "campaign_uuid": self.campaign_uuid})
