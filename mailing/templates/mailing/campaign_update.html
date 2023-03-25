@@ -1,0 +1,14 @@
+{% extends "product_base.html"%}
+{% load i18n %}
+{% load catalog_tags %}
+{% block ACTIONS %}
+<a class="mat-button mat-button-default" href="{% url 'dashboard:campaigns' %}"><i class="fas fa-list icon"></i><span>{% trans "Campaigns" %}</span></a>
+{% endblock ACTIONS %}
+
+{% block CONTENT_MAIN %}
+
+
+<div class="container new-product-wrapper">
+    {% include "tags/campaign_update_form.html" %}
+</div>
+{% endblock CONTENT_MAIN %}
