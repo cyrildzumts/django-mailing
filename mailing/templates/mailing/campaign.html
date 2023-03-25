@@ -18,8 +18,11 @@
             <div class="box">
                 <p class="entry"><span class="key">{% trans "Name" %}</span> <span class="value">{{campaign.name}}</span></p>
                 <p class="entry"><span class="key">{% trans "Key" %}</span> <span class="value">{{campaign.key}}</span></p>
+                <p class="entry"><span class="key">{% trans "Target" %}</span> <span class="value">{{campaign.target_link}}</span></p>
                 <p class="entry"><span class="key">{% trans "Created" %}</span> <span class="value">{{campaign.created_at|date:"F j, Y"}}</span></p>
                 <p class="entry"><span class="key">{% trans "Views" %}</span> <span class="value">{{campaign.view_count}}</span></p>
+                <p class="entry"><span class="key">{% trans "Header Text" %}</span> <span class="value">{{campaign.headerText|default:''}}</span></p>
+                <p class="entry"><span class="key">{% trans "Body Text" %}</span> <span class="value">{{campaign.bodyText|default:''}}</span></p>
                 <p class="entry"><span class="key">{% trans "Description" %}</span> <span class="value">{{campaign.description|default:''}}</span></p>
             </div>
             <div class="grid">
@@ -27,7 +30,7 @@
                 <div class="padding">
                     <span>{% trans "Image :" %}</span>
                     <div class="img-wrapper">
-                        <img class="img-responsive" src="{{campaign.get_image_url}}" alt="{{campaign.name}}">
+                        <img class="img-responsive" src="{{SITE_HOST}}{{campaign.get_image_url}}" alt="{{campaign.name}}">
                     </div>
                 </div>
                 {% else %}
