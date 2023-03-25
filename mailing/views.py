@@ -41,6 +41,9 @@ def campaigns(request):
         list_set = paginator.page(1)
     except EmptyPage:
         list_set = None
+        
+    BASE_TEMPLATE = getattr(settings, MAILING_CONSTANTS.SETTINGS_BASE_TEMPLATE_INHERIT)
+    logger.info(f"Mailing Campaigns : BASE TEMPLATE : {BASE_TEMPLATE}")
     context['page_title'] = page_title
     context['campaign_list'] = list_set
     context['content_title'] = page_title
