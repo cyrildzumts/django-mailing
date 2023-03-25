@@ -25,6 +25,9 @@
                 <p class="entry"><span class="key">{% trans "Body Text" %}</span> <span class="value">{{campaign.bodyText|default:''}}</span></p>
                 <p class="entry"><span class="key">{% trans "Description" %}</span> <span class="value">{{campaign.description|default:''}}</span></p>
                 <p class="entry"><span class="key">{% trans "SITE_HOST" %}</span> <span class="value">{{SITE_HOST}}</span></p>
+                {% if root_category_list %}
+                <p class="entry"><span class="key">{% trans "CATEGROES" %}</span> <span class="value">AVAILABLE</span></p>
+                {% endif %}
             </div>
             <div class="grid">
                 {% if campaign.image %}
