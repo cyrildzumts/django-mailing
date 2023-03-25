@@ -43,10 +43,10 @@ def update_campaign(campaign_uuid, postdata, files):
 
 
 def populate_with_required_context(request, context):
-    MAILING_TEMPLATE_CONTEXTS = getattr(settings, MAILING_CONSTANTS.SETTINGS_MAILING_TEMPLATE_CONTEXTS)
+    MAILING_TEMPLATE_PROCESSORS = getattr(settings, MAILING_CONSTANTS.SETTINGS_MAILING_TEMPLATE_CONTEXTS)
     MAILING_TEMPLATE_CONTEXTS_KEYS = getattr(settings, MAILING_CONSTANTS.SETTINGS_MAILING_TEMPLATE_CONTEXTS_KEYS)
-    requestContext = RequestContext(request, processors=MAILING_TEMPLATE_CONTEXTS)
-    logger.info(f"Populating context with {MAILING_TEMPLATE_CONTEXTS_KEYS} - RequestContext : {requestContext}")
+    requestContext = RequestContext(request, processors=MAILING_TEMPLATE_PROCESSORS,)
+    logger.info(f"Populating context with {MAILING_TEMPLATE_CONTEXTS_KEYS} - RequestContext : {requestContext} - PROCESSORS : {MAILING_TEMPLATE_PROCESSORS}")
     for k in MAILING_TEMPLATE_CONTEXTS_KEYS:
         ck = requestContext[k]
         logger.info(f"populating context {k} with {ck}")
