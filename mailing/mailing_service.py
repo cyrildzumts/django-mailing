@@ -42,14 +42,14 @@ def update_campaign(campaign_uuid, postdata, files):
     
 
 def generate_mail_campaign_html(campaign):
-    template_name = settings.get(MAILING_CONSTANTS.SETTINGS_DEFAULT_MAIL_TEMPLATE)
+    template_name = getattr(settings, MAILING_CONSTANTS.SETTINGS_DEFAULT_MAIL_TEMPLATE)
     mail_html = render_to_string(template_name, {'campaign': campaign})
     with open(f"{campaign.slug}.html", 'w') as f:
         f.write(mail_html)
         logger.info(f" Mail Campaign {campaign.name} html file created")
         
 def send_mail_campaign(campaign):
-    template_name = settings.get(MAILING_CONSTANTS.SETTINGS_DEFAULT_MAIL_TEMPLATE)
+    template_name = getattr(settings, MAILING_CONSTANTS.SETTINGS_DEFAULT_MAIL_TEMPLATE)
     mail_html = render_to_string(template_name, {'campaign': campaign})
     
     

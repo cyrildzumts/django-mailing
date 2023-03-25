@@ -27,7 +27,7 @@ def campaigns(request):
         logger.warning("Mailing : PermissionDenied to user %s for path %s", username, request.path)
         raise PermissionDenied
 
-    template_name = settings.get(MAILING_CONSTANTS.SETTINGS_TEMPLATE_CAMPAIGNS_PAGE, MAILING_CONSTANTS.DEFAULT_MAILING_CAMPAIGNS_PAGE)
+    template_name = getattr(settings, MAILING_CONSTANTS.SETTINGS_TEMPLATE_CAMPAIGNS_PAGE, MAILING_CONSTANTS.DEFAULT_MAILING_CAMPAIGNS_PAGE)
     page_title = UI_STRINGS.UI_MAIL_CAMPAIGN_LIST_PAGE_TITLE
     context = {}
 
@@ -44,13 +44,13 @@ def campaigns(request):
     context['page_title'] = page_title
     context['campaign_list'] = list_set
     context['content_title'] = page_title
-    context['BASE_TEMPLATE'] = settings.get(MAILING_CONSTANTS.SETTINGS_BASE_TEMPLATE_INHERIT)
+    context['BASE_TEMPLATE'] = getattr(settings, MAILING_CONSTANTS.SETTINGS_BASE_TEMPLATE_INHERIT)
     return render(request,template_name, context)
 
 
 @login_required
 def campaign_create(request):
-    template_name = settings.get(MAILING_CONSTANTS.SETTINGS_TEMPLATE_CAMPAIGN_CREATE_PAGE, MAILING_CONSTANTS.DEFAULT_MAILING_CAMPAIGN_CREATE_PAGE)
+    template_name = getattr(settings, MAILING_CONSTANTS.SETTINGS_TEMPLATE_CAMPAIGN_CREATE_PAGE, MAILING_CONSTANTS.DEFAULT_MAILING_CAMPAIGN_CREATE_PAGE)
     page_title = UI_STRINGS.UI_MAIL_CAMPAIGN_CREATE_PAGE_TITLE
     username = request.user.username
     if not request.user.has_perm('mailing.add_mailcampaign'):
@@ -78,7 +78,7 @@ def campaign_create(request):
     context['form'] = form
     context['DESCRIPTION_MAX_SIZE'] = MAILING_CONSTANTS.DESCRIPTION_MAX_SIZE
     context['content_title'] = page_title
-    context['BASE_TEMPLATE'] = settings.get(MAILING_CONSTANTS.SETTINGS_BASE_TEMPLATE_INHERIT)
+    context['BASE_TEMPLATE'] = getattr(settings, MAILING_CONSTANTS.SETTINGS_BASE_TEMPLATE_INHERIT)
     return render(request, template_name, context)
 
 
@@ -89,7 +89,7 @@ def campaign_detail(request,slug, campaign_uuid=None):
         logger.warning("Mailing : PermissionDenied to user %s for path %s", username, request.path)
         raise PermissionDenied
 
-    template_name = settings.get(MAILING_CONSTANTS.SETTINGS_TEMPLATE_CAMPAIGN_PAGE, MAILING_CONSTANTS.DEFAULT_MAILING_CAMPAIGN_PAGE)
+    template_name = getattr(settings, MAILING_CONSTANTS.SETTINGS_TEMPLATE_CAMPAIGN_PAGE, MAILING_CONSTANTS.DEFAULT_MAILING_CAMPAIGN_PAGE)
     page_title = UI_STRINGS.UI_MAIL_CAMPAIGN_PAGE_TITLE
     
 
@@ -99,7 +99,7 @@ def campaign_detail(request,slug, campaign_uuid=None):
         'campaign': campaign,
         'content_title': page_title
     }
-    context['BASE_TEMPLATE'] = settings.get(MAILING_CONSTANTS.SETTINGS_BASE_TEMPLATE_INHERIT)
+    context['BASE_TEMPLATE'] = getattr(settings,MAILING_CONSTANTS.SETTINGS_BASE_TEMPLATE_INHERIT)
     return render(request,template_name, context)
 
 
@@ -111,7 +111,7 @@ def campaign_update(request, slug, campaign_uuid):
         raise PermissionDenied
 
 
-    template_name = settings.get(MAILING_CONSTANTS.SETTINGS_TEMPLATE_CAMPAIGN_UPDATE_PAGE, MAILING_CONSTANTS.DEFAULT_MAILING_CAMPAIGN_UPDATE_PAGE)
+    template_name = getattr(settings, MAILING_CONSTANTS.SETTINGS_TEMPLATE_CAMPAIGN_UPDATE_PAGE, MAILING_CONSTANTS.DEFAULT_MAILING_CAMPAIGN_UPDATE_PAGE)
     page_title = UI_STRINGS.UI_MAIL_CAMPAIGN_UPDATE_PAGE_TITLE
     context = {
         'page_title': page_title,
@@ -133,7 +133,7 @@ def campaign_update(request, slug, campaign_uuid):
     context['form'] = form
     context['campaign'] = campaign
     context['DESCRIPTION_MAX_SIZE'] = MAILING_CONSTANTS.DESCRIPTION_MAX_SIZE
-    context['BASE_TEMPLATE'] = settings.get(MAILING_CONSTANTS.SETTINGS_BASE_TEMPLATE_INHERIT)
+    context['BASE_TEMPLATE'] = getattr(settings, MAILING_CONSTANTS.SETTINGS_BASE_TEMPLATE_INHERIT)
     return render(request, template_name, context)
 
 @login_required
