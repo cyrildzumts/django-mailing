@@ -24,6 +24,7 @@
                 <p class="entry"><span class="key">{% trans "Header Text" %}</span> <span class="value">{{campaign.headerText|default:''}}</span></p>
                 <p class="entry"><span class="key">{% trans "Body Text" %}</span> <span class="value">{{campaign.bodyText|default:''}}</span></p>
                 <p class="entry"><span class="key">{% trans "Description" %}</span> <span class="value">{{campaign.description|default:''}}</span></p>
+                <p class="entry"><span class="key">{% trans "SITE_HOST" %}</span> <span class="value">{{SITE_HOST}}</span></p>
             </div>
             <div class="grid">
                 {% if campaign.image %}
