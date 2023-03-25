@@ -7,7 +7,7 @@
 {% if perms.mailing.add_mailcampaign %}
 <a class="margin" href="{% url 'mailing:campaign-create'%}"> <i class="fas fa-plus icon"></i><span>{% trans "New Campaign" %}</span></a>
 {% endif %}
-<a class="margin" href="{% url 'mailing:generate-html' campaign.slug campaign.campaign_uuid %}"><i class="fas fa-plus icon"></i><span>{% trans "Generate HTML" %}</span></a>
+<a class="margin" href="{% url 'mailing:generate-html' campaign.campaign_uuid %}"><i class="fas fa-plus icon"></i><span>{% trans "Generate HTML" %}</span></a>
 {% if perms.mailing.add_mailcampaign %}
 <a class="margin" href="{{campaign.get_update_url}}"><i class="fas fa-refresh icon"></i><span>{% trans "Update" %}</span></a>
 {% endif %}
