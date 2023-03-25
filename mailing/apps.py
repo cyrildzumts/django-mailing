@@ -11,7 +11,7 @@ class MailingConfig(AppConfig):
     name = 'mailing'
     
     def ready(self):
-        logger.info("Django-amiling starting. Checking required settings ...")
+        logger.info("Django-mailing starting. Checking required settings ...")
         missing_settings = []
         for setting in constants.REQUIRED_SETTINGS:
             if not hasattr(settings, setting):
