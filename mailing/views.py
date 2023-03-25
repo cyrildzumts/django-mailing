@@ -12,7 +12,7 @@ from mailing.models import MailCampaign
 from mailing.forms import MailCampaignForm
 from mailing import constants as MAILING_CONSTANTS
 from mailing import mailing_service
-from django.template import RequestContext
+from django.template import RequestContext, Context
 from mailing.resources import ui_strings as UI_STRINGS
 import csv
 import logging
@@ -191,7 +191,11 @@ def campaign_generate_mail(request, campaign_uuid=None):
     campaign = get_object_or_404(MailCampaign,campaign_uuid=campaign_uuid)
     
     try:
-        mailing_service.generate_mail_campaign_html(campaign, RequestContext(request, {'campaign': campaign}))
+        context = {
+            'campaign': campaign,
+        }
+        mailing_service.populate_with_required_context(request, context)
+        mailing_service.send_mail_campaign(campaign, context)
         messages.success(request, _('MailCampaign HTML not generated'))
     except Exception as e :
         messages.warning(request, _('MailCampaign HTML not generated'))
@@ -210,12 +214,18 @@ def campaign_generate_html(request, campaign_uuid=None):
     campaign = get_object_or_404(MailCampaign,campaign_uuid=campaign_uuid)
     
     try:
-        mailing_service.generate_mail_campaign_html(campaign, RequestContext(request, {'campaign': campaign}))
+        context = {
+            'campaign': campaign,
+        }
+        mailing_service.populate_with_required_context(request, context)
+        mailing_service.generate_mail_campaign_html(campaign, context)
         messages.success(request, _('MailCampaign HTML not generated'))
     except Exception as e :
         messages.warning(request, _('MailCampaign HTML not generated'))
         logger.warning(f"Mailing : MailCampaign HTML not generate : {e}")
     
     return redirect(campaign.get_absolute_url())
+
+
 
 

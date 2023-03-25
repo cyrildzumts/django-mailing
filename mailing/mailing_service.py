@@ -1,3 +1,4 @@
+from django.template import RequestContext
 from django.template.loader import render_to_string
 from django.utils.translation import ugettext_lazy as _
 from django.core.exceptions import ObjectDoesNotExist
@@ -39,7 +40,14 @@ def update_campaign(campaign_uuid, postdata, files):
             return {'success': False, 'message': _('MailCampaign not updated'), 'errors': form.errors}
     except ObjectDoesNotExist as e:
         return {'success': False, 'message': _('MailCampaign not found'), 'errors': str(e)}
-    
+
+
+def populate_with_required_context(request, context):
+    requestContext = RequestContext(request, {})
+    MAILING_TEMPLATE_CONTEXTS = getattr(settings, MAILING_CONSTANTS.SETTINGS_MAILING_TEMPLATE_CONTEXTS)
+    for k in MAILING_TEMPLATE_CONTEXTS:
+        context[k] = requestContext[k]
+    return context
 
 def generate_mail_campaign_html(campaign, context):
     template_name = getattr(settings, MAILING_CONSTANTS.SETTINGS_DEFAULT_MAIL_TEMPLATE)
@@ -47,6 +55,7 @@ def generate_mail_campaign_html(campaign, context):
     with open(f"{campaign.slug}.html", 'w') as f:
         f.write(mail_html)
         logger.info(f" Mail Campaign {campaign.name} html file created")
+        
         
 def send_mail_campaign(campaign, context):
     template_name = getattr(settings, MAILING_CONSTANTS.SETTINGS_DEFAULT_MAIL_TEMPLATE)
