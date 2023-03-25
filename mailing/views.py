@@ -154,7 +154,7 @@ def campaign_delete(request, campaign_uuid=None):
     MailCampaign.objects.filter(pk=campaign.pk).delete()
     logger.info(f'MailCampaign \"{campaign.name}\" deleted by user \"{request.user.username}\"')
     messages.success(request, _('Mail Campaign deleted'))
-    return redirect('mailing:mail-campaigns')
+    return redirect('mailing:campaigns')
 
 @login_required
 def campaigns_delete(request):
@@ -178,7 +178,7 @@ def campaigns_delete(request):
     else:
         messages.error(request, f"MailCampaign \"{id_list}\" could not be deleted")
         logger.error(f"ID list invalid. Error : {id_list}")
-    return redirect('mailing:mail-campaigns')
+    return redirect('mailing:campaigns')
 
 @login_required
 def campaign_generate_mail(request, campaign_uuid=None):
@@ -196,7 +196,7 @@ def campaign_generate_mail(request, campaign_uuid=None):
         messages.warning(request, _('MailCampaign HTML not generated'))
         logger.warning(f"Mailing : MailCampaign HTML not generate : {e}")
     
-    return redirect('mailing:campaign-detail', campaign_uuid=campaign_uuid)
+    return redirect(campaign.get_absolute_url())
 
 
 @login_required
@@ -215,6 +215,6 @@ def campaign_generate_html(request, campaign_uuid=None):
         messages.warning(request, _('MailCampaign HTML not generated'))
         logger.warning(f"Mailing : MailCampaign HTML not generate : {e}")
     
-    return redirect('mailing:campaign-detail', campaign_uuid=campaign_uuid)
+    return redirect(campaign.get_absolute_url())
 
 
