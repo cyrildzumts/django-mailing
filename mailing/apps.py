@@ -16,7 +16,7 @@ class MailingConfig(AppConfig):
         for setting in constants.REQUIRED_SETTINGS:
             if not hasattr(settings, setting):
                 missing_settings.append(setting)
-        if len(missing_settings) == 0:
+        if len(missing_settings) > 0:
             msg = f"Django-mailing can not start. Required settings are missing : {missing_settings}. Please provide the settings in the global settings"
             logger.error(msg)
             raise Exception(msg)
