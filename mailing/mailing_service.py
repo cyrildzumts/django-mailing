@@ -46,7 +46,7 @@ def populate_with_required_context(request, context):
     MAILING_TEMPLATE_CONTEXTS = getattr(settings, MAILING_CONSTANTS.SETTINGS_MAILING_TEMPLATE_CONTEXTS)
     MAILING_TEMPLATE_CONTEXTS_KEYS = getattr(settings, MAILING_CONSTANTS.SETTINGS_MAILING_TEMPLATE_CONTEXTS_KEYS)
     requestContext = RequestContext(request, processors=MAILING_TEMPLATE_CONTEXTS)
-    logger.info(f"Populating context with {MAILING_TEMPLATE_CONTEXTS_KEYS}")
+    logger.info(f"Populating context with {MAILING_TEMPLATE_CONTEXTS_KEYS} - RequestContext : {requestContext}")
     for k in MAILING_TEMPLATE_CONTEXTS_KEYS:
         ck = requestContext[k]
         logger.info(f"populating context {k} with {ck}")
