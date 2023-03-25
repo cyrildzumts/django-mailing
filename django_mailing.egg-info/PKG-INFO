@@ -1,0 +1,47 @@
+Metadata-Version: 1.1
+Name: django-mailing
+Version: 1.0.0
+Summary: A Django Mailling app for Web Site
+Home-page: https://github.com/cyrildzumts/django-mailing
+Author: Cyrille Ngassam Nkwenga
+Author-email: cyrildz@gmail.com
+License: BSD License
+Description: =====
+        mailing
+        =====
+        
+        Mailing is a Django app that add support for sending mail of all kind. 
+        Detailed documentation is in the "docs" directory.
+        
+        Quick start
+        -----------
+        
+        1. Add "mailling" to your INSTALLED_APPS setting like this::
+        
+            INSTALLED_APPS = [
+                ...
+                'mailing',
+            ]
+        
+        2. Include the polls URLconf in your project urls.py like this::
+        
+            path('mailing/', include('mailing.urls')),
+        
+        3. Run `python manage.py migrate` to create the mailings models.
+        
+        4. Start the development server and visit http://127.0.0.1:8000/admin/
+           to create a new mail campaign (you'll need the Admin app enabled).
+        
+        5. Visit http://127.0.0.1:8000/mailing/ to access the planed mailing campaign
+Platform: UNKNOWN
+Classifier: Environment :: Web Environment
+Classifier: Framework :: Django
+Classifier: Framework :: Django :: 3.2.7
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: BSD License
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Topic :: Internet :: WWW/HTTP
+Classifier: Topic :: Internet :: WWW/HTTP :: Dynamic Content

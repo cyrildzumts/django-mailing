@@ -44,6 +44,7 @@ def campaigns(request):
     context['page_title'] = page_title
     context['campaign_list'] = list_set
     context['content_title'] = page_title
+    context['BASE_TEMPLATE'] = settings.get(MAILING_CONSTANTS.SETTINGS_BASE_TEMPLATE_INHERIT)
     return render(request,template_name, context)
 
 
@@ -77,6 +78,7 @@ def campaign_create(request):
     context['form'] = form
     context['DESCRIPTION_MAX_SIZE'] = MAILING_CONSTANTS.DESCRIPTION_MAX_SIZE
     context['content_title'] = page_title
+    context['BASE_TEMPLATE'] = settings.get(MAILING_CONSTANTS.SETTINGS_BASE_TEMPLATE_INHERIT)
     return render(request, template_name, context)
 
 
@@ -97,6 +99,7 @@ def campaign_detail(request,slug, campaign_uuid=None):
         'campaign': campaign,
         'content_title': page_title
     }
+    context['BASE_TEMPLATE'] = settings.get(MAILING_CONSTANTS.SETTINGS_BASE_TEMPLATE_INHERIT)
     return render(request,template_name, context)
 
 
@@ -130,6 +133,7 @@ def campaign_update(request, slug, campaign_uuid):
     context['form'] = form
     context['campaign'] = campaign
     context['DESCRIPTION_MAX_SIZE'] = MAILING_CONSTANTS.DESCRIPTION_MAX_SIZE
+    context['BASE_TEMPLATE'] = settings.get(MAILING_CONSTANTS.SETTINGS_BASE_TEMPLATE_INHERIT)
     return render(request, template_name, context)
 
 @login_required
