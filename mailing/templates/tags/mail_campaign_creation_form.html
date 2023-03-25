@@ -4,16 +4,16 @@
     <div class="row" id="created-producted-link">
         <a class="mat-button mat-button-outline" href=""></a>
     </div>
-    <form id="campaign-upload-form" class="form full" name="campaign" action="{% url 'dashboard:campaign-create' %}" method="POST" enctype="multipart/form-data">{% csrf_token %}
+    <form id="mail-campaign-upload-form" class="form full" name="mailcampaign" action="{% url 'mailing:campaign-create' %}" method="POST" enctype="multipart/form-data">{% csrf_token %}
         <input type="hidden" name="added_by" value="{{request.user.pk}}">        
         <div class="mat-box container">
             <div class="actions flex-left padding-v">
-                <a class="mat-button mat-button-text js-cancel" href="{%url 'dashboard:campaigns'%}">{% trans "Back" %}</a>
+                <a class="mat-button mat-button-text js-cancel" href="{%url 'mailing:campaigns'%}">{% trans "Back" %}</a>
             </div>
             <div class="col-xs-12">
                 <div class="box">
                     <div class="bold">{% trans "Image" %}</div>
-                   {% include "tags/images_uploader.html" with FORM_ID="campaign-upload-form" INPUT_ID="image" INPUT_NAME="" UPLOADER_TITLE=UI_STRINGS_CONTEXT.UI_CAMPAIGN_IMAGE_TITLE%}
+                   {% include "tags/images_uploader.html" with FORM_ID="campaign-upload-form" INPUT_ID="image" INPUT_NAME="image" UPLOADER_TITLE=UI_STRINGS_CONTEXT.UI_CAMPAIGN_IMAGE_TITLE%}
                 </div>
             </div>
             <div class="col-m-12 col-7">
@@ -32,23 +32,28 @@
                             <label for="cta">{% trans "CTA" %}</label>
                             <input type="text" id="cta" class="full" name="cta" >
                         </div>
+                        <div class="form-group-wrapper">
+                            <div class="form-group">
+                                <label for="target_link">{% trans "Target Link" %}</label>
+                                <input type="text" id="target_link" class="full" name="target_link">
+                            </div>
+                        </div>
                     </div>
                     <div class="form-group-wrapper">
-                        <div class="form-group">
+                        <div class="form-group full">
                             <label for="headerText">{% trans "Header Text" %}</label>
                             <input type="text" id="headerText" class="full" name="headerText" >
                         </div>
-                        <div class="form-group">
-                            <label for="bodyText">{% trans "Body Text" %}</label>
-                            <input type="text" id="bodyText" class="full" name="bodyText" >
-                        </div>
                     </div>
                     <div class="form-group-wrapper">
                         <div class="form-group">
-                            <label for="target_link">{% trans "Target Link" %}</label>
-                            <input type="text" id="target_link" class="full" name="target_link">
+                            <label class="padding-bottom" for="bodyText">{% trans "Body Text" %}</label>
+                            <textarea id="bodyText" class="limited-input bordered" name="bodyText" cols="30" rows="10" data-target="bodyText-counter" data-max-length="300"></textarea>
                         </div>
+                        
+                        <div class="flex flex-left padding-l"> <span id="bodyText-counter" class="char-counter">0</span><span class="text-max-length">/300</span></div>
                     </div>
+                    
                     
                     <div class="form-group-wrapper">
                         <div class="form-group">
@@ -56,10 +61,10 @@
                             <textarea id="description" class="limited-input bordered" name="description" cols="30" rows="10" data-target="description-counter" data-max-length="300"></textarea>
                         </div>
                         
-                        <div class="row padding-l"> <span id="description-counter" class="char-counter">0</span><span class="text-max-length">/300</span></div>
+                        <div class="flex flex-left padding-l"> <span id="description-counter" class="char-counter">0</span><span class="text-max-length">/300</span></div>
                     </div>
                     <div class="actions flex-right">
-                        <a class="mat-button mat-button-outline js-cancel" href="{%url 'dashboard:campaigns'%}">{% trans "Cancel" %}</a>
+                        <a class="mat-button mat-button-outline js-cancel" href="{%url 'mailing:campaigns'%}">{% trans "Cancel" %}</a>
                         <button class="mat-button mat-button-default" type="submit">{{UI_STRINGS_CONTEXT.UI_CAMPAIGN_CREATE_BTN_LABEL}}</button>
                     </div>
                 </div><!--End of box-->
