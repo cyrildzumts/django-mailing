@@ -47,10 +47,12 @@ def populate_with_required_context(request, context):
     MAILING_TEMPLATE_CONTEXTS_KEYS = getattr(settings, MAILING_CONSTANTS.SETTINGS_MAILING_TEMPLATE_CONTEXTS_KEYS)
     requestContext = RequestContext(request, processors=MAILING_TEMPLATE_PROCESSORS,)
     logger.info(f"Populating context with {MAILING_TEMPLATE_CONTEXTS_KEYS} - RequestContext : {requestContext} - PROCESSORS : {MAILING_TEMPLATE_PROCESSORS}")
-    for k in MAILING_TEMPLATE_CONTEXTS_KEYS:
-        ck = requestContext[k]
-        logger.info(f"populating context {k} with {ck}")
-        context[k] = requestContext[k]
+    # for k in MAILING_TEMPLATE_CONTEXTS_KEYS:
+    #     ck = requestContext[k]
+    #     logger.info(f"populating context {k} with {ck}")
+    #     context[k] = requestContext[k]
+    context['SITE_NAME'] = settings.SITE_NAME
+    context['SITE_HOST'] = settings.SITE_HOST
     return context
 
 def generate_mail_campaign_html(campaign, context):
