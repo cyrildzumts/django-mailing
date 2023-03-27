@@ -71,8 +71,9 @@ def generate_mail_campaign_html(campaign, request):
         logger.info(f" Mail Campaign {campaign.name} html file created")
         
         
-def send_mail_campaign(campaign, context):
+def send_mail_campaign(campaign, request):
     template_name = getattr(settings, MAILING_CONSTANTS.SETTINGS_DEFAULT_MAIL_TEMPLATE)
+    context = populate_with_required_context(request,{'campaign': campaign, 'MAIL_TITLE': campaign.name})
     mail_html = render_to_string(template_name, context)
     
     
