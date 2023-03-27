@@ -64,6 +64,7 @@ def populate_with_required_context(request, context):
     
     return template_context
 
+
 def generate_mail_campaign_html(campaign, request):
     template_name = getattr(settings, MAILING_CONSTANTS.SETTINGS_DEFAULT_MAIL_TEMPLATE)
     context = populate_with_required_context(request,{'campaign': campaign, 'MAIL_TITLE': campaign.name})
@@ -77,10 +78,13 @@ def send_mail_campaign(campaign, request):
     template_name = getattr(settings, MAILING_CONSTANTS.SETTINGS_DEFAULT_MAIL_TEMPLATE)
     context = populate_with_required_context(request,{'campaign': campaign, 'MAIL_TITLE': campaign.name})
     mail_html = render_to_string(template_name, context)
+    email_context = {
+        'mail': mail_html,
+        'subject': campaign.name
+    }
+    tasks.send_mail_campaign_task.apply_async(args=[email_context])
     
     
-
-
 def campaign_new_visit(param_dicts):
     tasks.campaign_track_visit.apply_async(args=[param_dicts])
     

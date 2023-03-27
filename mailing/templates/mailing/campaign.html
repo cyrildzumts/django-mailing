@@ -27,11 +27,10 @@
             </div>
         </div><!--End of grid-->
     </div><!--End col-->
-    <div class="col-m-12 col-5">
+    <div class="col-m-12 col-3">
         <div class="container">
             {% if campaign.image %}
             <div class="padding">
-                <span>{% trans "Image :" %}</span>
                 <div class="img-wrapper">
                     <img class="img-responsive" src="{{SITE_HOST}}{{campaign.get_image_url}}" alt="{{campaign.name}}">
                 </div>
