@@ -62,7 +62,7 @@ def populate_with_required_context(request, context):
     requestContext = RequestContext(request, context, processors=processors)
     logger.info(f"Populating context with {MAILING_TEMPLATE_PROCESSORS} - RequestContext : {requestContext} - PROCESSORS : {processors} -Context : {template_context}")
     
-    return requestContext
+    return template_context
 
 def generate_mail_campaign_html(campaign, request):
     template_name = getattr(settings, MAILING_CONSTANTS.SETTINGS_DEFAULT_MAIL_TEMPLATE)
