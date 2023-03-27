@@ -59,8 +59,6 @@ def populate_with_required_context(request, context):
             msg = f"Error while looking up for template processors defined by {e}"
             logger.warn(msg)
             raise Exception(msg)
-    requestContext = RequestContext(request, context, processors=processors)
-    logger.info(f"Populating context with {MAILING_TEMPLATE_PROCESSORS} - RequestContext : {requestContext} - PROCESSORS : {processors} -Context : {template_context}")
     
     return template_context
 
