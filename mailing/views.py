@@ -216,6 +216,7 @@ def campaign_generate_html(request, campaign_uuid=None):
     try:
         context = {
             'campaign': campaign,
+            'MAIL_TITLE': campaign.name
         }
         #mailing_service.populate_with_required_context(request, context)
         mailing_service.generate_mail_campaign_html(campaign, request)

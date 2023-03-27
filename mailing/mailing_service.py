@@ -66,7 +66,7 @@ def populate_with_required_context(request, context):
 
 def generate_mail_campaign_html(campaign, request):
     template_name = getattr(settings, MAILING_CONSTANTS.SETTINGS_DEFAULT_MAIL_TEMPLATE)
-    context = populate_with_required_context(request,{'campaign': campaign})
+    context = populate_with_required_context(request,{'campaign': campaign, 'MAIL_TITLE': campaign.name})
     mail_html = render_to_string(template_name, context)
     with open(f"{campaign.slug}.html", 'w') as f:
         f.write(mail_html)
