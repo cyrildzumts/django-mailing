@@ -196,7 +196,7 @@ def campaign_generate_mail(request, campaign_uuid=None):
         }
         mailing_service.populate_with_required_context(request, context)
         mailing_service.send_mail_campaign(campaign, context)
-        messages.success(request, _('MailCampaign HTML not generated'))
+        messages.success(request, _('MailCampaign generated and sent'))
     except Exception as e :
         messages.warning(request, _('MailCampaign HTML not generated'))
         logger.warning(f"Mailing : MailCampaign HTML not generate : {e}")
@@ -219,7 +219,7 @@ def campaign_generate_html(request, campaign_uuid=None):
         }
         #mailing_service.populate_with_required_context(request, context)
         mailing_service.generate_mail_campaign_html(campaign, request)
-        messages.success(request, _('MailCampaign HTML not generated'))
+        messages.success(request, _('MailCampaign HTML generated'))
     except Exception as e :
         messages.warning(request, _('MailCampaign HTML not generated'))
         logger.warning(f"Mailing : MailCampaign HTML not generate : {e}")
