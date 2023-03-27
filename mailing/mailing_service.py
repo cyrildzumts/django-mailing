@@ -6,6 +6,7 @@ from django.conf import settings
 from mailing.models import MailCampaign
 from mailing.forms import MailCampaignForm
 from mailing import constants as MAILING_CONSTANTS
+import importlib
 import datetime
 import logging
 import os
@@ -45,23 +46,25 @@ def update_campaign(campaign_uuid, postdata, files):
 def populate_with_required_context(request, context):
     MAILING_TEMPLATE_PROCESSORS = getattr(settings, MAILING_CONSTANTS.SETTINGS_MAILING_TEMPLATE_CONTEXTS)
     MAILING_TEMPLATE_CONTEXTS_KEYS = getattr(settings, MAILING_CONSTANTS.SETTINGS_MAILING_TEMPLATE_CONTEXTS_KEYS)
-    requestContext = RequestContext(request, processors=MAILING_TEMPLATE_PROCESSORS)
-    logger.info(f"Populating context with {MAILING_TEMPLATE_CONTEXTS_KEYS} - RequestContext : {requestContext} - PROCESSORS : {MAILING_TEMPLATE_PROCESSORS}")
-    # for k in MAILING_TEMPLATE_CONTEXTS_KEYS:
-    #     ck = requestContext[k]
-    #     logger.info(f"populating context {k} with {ck}")
-    #     context[k] = requestContext[k]
-    context['SITE_NAME'] = settings.SITE_NAME
-    context['SITE_HOST'] = settings.SITE_HOST
     
-    return context
+    processors = []
+    for e in MAILING_TEMPLATE_PROCESSORS:
+        module = importlib.import_module(e.get('module'))
+        if hasattr(module, e.get('processor')):
+            processors.append(getattr(module, e.get('processor')))
+        else:
+            msg = f"Error while looking up for template processors defined by {e}"
+            logger.warn(msg)
+            raise Exception(msg)
+    requestContext = RequestContext(request, context, processors=processors)
+    logger.info(f"Populating context with {MAILING_TEMPLATE_PROCESSORS} - RequestContext : {requestContext} - PROCESSORS : {processors}")
+    
+    return requestContext
 
 def generate_mail_campaign_html(campaign, request):
     template_name = getattr(settings, MAILING_CONSTANTS.SETTINGS_DEFAULT_MAIL_TEMPLATE)
     template = get_template(template_name)
-    MAILING_TEMPLATE_PROCESSORS = getattr(settings, MAILING_CONSTANTS.SETTINGS_MAILING_TEMPLATE_CONTEXTS)
-    MAILING_TEMPLATE_CONTEXTS_KEYS = getattr(settings, MAILING_CONSTANTS.SETTINGS_MAILING_TEMPLATE_CONTEXTS_KEYS)
-    requestContext = RequestContext(request,{'campaign': campaign}, processors=MAILING_TEMPLATE_PROCESSORS)
+    requestContext = populate_with_required_context(request,{'campaign': campaign})
     mail_html = template.render(requestContext)
     #mail_html = render_to_string(template_name, context)
     with open(f"{campaign.slug}.html", 'w') as f:
