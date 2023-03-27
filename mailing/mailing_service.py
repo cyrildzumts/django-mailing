@@ -46,27 +46,28 @@ def update_campaign(campaign_uuid, postdata, files):
 def populate_with_required_context(request, context):
     MAILING_TEMPLATE_PROCESSORS = getattr(settings, MAILING_CONSTANTS.SETTINGS_MAILING_TEMPLATE_CONTEXTS)
     MAILING_TEMPLATE_CONTEXTS_KEYS = getattr(settings, MAILING_CONSTANTS.SETTINGS_MAILING_TEMPLATE_CONTEXTS_KEYS)
-    
+    template_context = {}
+    template_context.update(context)
     processors = []
     for e in MAILING_TEMPLATE_PROCESSORS:
         module = importlib.import_module(e.get('module'))
         if hasattr(module, e.get('processor')):
-            processors.append(getattr(module, e.get('processor')))
+            processor = getattr(module, e.get('processor'))
+            template_context.update(processor(request))
+            processors.append(processor)
         else:
             msg = f"Error while looking up for template processors defined by {e}"
             logger.warn(msg)
             raise Exception(msg)
     requestContext = RequestContext(request, context, processors=processors)
-    logger.info(f"Populating context with {MAILING_TEMPLATE_PROCESSORS} - RequestContext : {requestContext} - PROCESSORS : {processors}")
+    logger.info(f"Populating context with {MAILING_TEMPLATE_PROCESSORS} - RequestContext : {requestContext} - PROCESSORS : {processors} -Context : {template_context}")
     
     return requestContext
 
 def generate_mail_campaign_html(campaign, request):
     template_name = getattr(settings, MAILING_CONSTANTS.SETTINGS_DEFAULT_MAIL_TEMPLATE)
-    template = get_template(template_name)
-    requestContext = populate_with_required_context(request,{'campaign': campaign})
-    mail_html = template.render(requestContext)
-    #mail_html = render_to_string(template_name, context)
+    context = populate_with_required_context(request,{'campaign': campaign})
+    mail_html = render_to_string(template_name, context)
     with open(f"{campaign.slug}.html", 'w') as f:
         f.write(mail_html)
         logger.info(f" Mail Campaign {campaign.name} html file created")
