@@ -2,10 +2,12 @@ from django.template import RequestContext, Template
 from django.template.loader import render_to_string, get_template
 from django.utils.translation import ugettext_lazy as _
 from django.core.exceptions import ObjectDoesNotExist
+from django.db.models import F
 from django.conf import settings
 from mailing.models import MailCampaign
 from mailing.forms import MailCampaignForm
-from mailing import constants as MAILING_CONSTANTS
+from mailing import constants as MAILING_CONSTANTS, tasks
+
 import importlib
 import datetime
 import logging
@@ -75,6 +77,13 @@ def send_mail_campaign(campaign, request):
     template_name = getattr(settings, MAILING_CONSTANTS.SETTINGS_DEFAULT_MAIL_TEMPLATE)
     context = populate_with_required_context(request,{'campaign': campaign, 'MAIL_TITLE': campaign.name})
     mail_html = render_to_string(template_name, context)
+    
+    
+
+
+def campaign_new_visit(param_dicts):
+    tasks.campaign_track_visit.apply_async(args=[param_dicts])
+    
     
     
     

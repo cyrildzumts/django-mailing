@@ -6,7 +6,10 @@ from celery import shared_task
 from django.template.loader import render_to_string
 from django.dispatch import receiver
 from django.conf import settings
+from mailing import constants as MAILING_CONSTANTS
 import logging
+
+from mailing.models import MailCampaign
 
 logger = logging.getLogger(__name__)
 
@@ -95,3 +98,12 @@ def send_mass_mail_task(email_context=None):
         )
     else:
         logger.warn("send_mass_mail_task: email_context or recipients not available")
+        
+
+@shared_task
+def campaign_track_visit(param_dicts):
+    logger.info(f"Updating MailCampaign Views count : {param_dicts}")
+    qs = MailCampaign.objects.filter(key=param_dicts[MAILING_CONSTANTS.PARAM_CAMPAIGN_KEY])
+    if not qs.exists():
+        return
+    qs.update(view_count=F('view_count') + 1)
