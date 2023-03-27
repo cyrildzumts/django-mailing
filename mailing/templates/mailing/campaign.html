@@ -12,8 +12,8 @@
 <a class="margin" href="{{campaign.get_update_url}}"><i class="fas fa-refresh icon"></i><span>{% trans "Update" %}</span></a>
 {% endif %}
 </div>
-<div class="container">
-    <div class="mat-box">
+<div class="container style-box">
+    <div class="col-m-12 col-5">
         <div class="grid">
             <div class="box">
                 <p class="entry"><span class="key">{% trans "Name" %}</span> <span class="value">{{campaign.name}}</span></p>
@@ -24,26 +24,24 @@
                 <p class="entry"><span class="key">{% trans "Header Text" %}</span> <span class="value">{{campaign.headerText|default:''}}</span></p>
                 <p class="entry"><span class="key">{% trans "Body Text" %}</span> <span class="value">{{campaign.bodyText|default:''}}</span></p>
                 <p class="entry"><span class="key">{% trans "Description" %}</span> <span class="value">{{campaign.description|default:''}}</span></p>
-                <p class="entry"><span class="key">{% trans "SITE_HOST" %}</span> <span class="value">{{SITE_HOST}}</span></p>
-                {% if root_category_list %}
-                <p class="entry"><span class="key">{% trans "CATEGROES" %}</span> <span class="value">AVAILABLE</span></p>
-                {% endif %}
-            </div>
-            <div class="grid">
-                {% if campaign.image %}
-                <div class="padding">
-                    <span>{% trans "Image :" %}</span>
-                    <div class="img-wrapper">
-                        <img class="img-responsive" src="{{SITE_HOST}}{{campaign.get_image_url}}" alt="{{campaign.name}}">
-                    </div>
-                </div>
-                {% else %}
-                <div class="padding">
-                    <span>{% trans "no images" %}</span>
-                </div>
-                {% endif %}
             </div>
         </div><!--End of grid-->
-    </div><!--End mat-box-->
+    </div><!--End col-->
+    <div class="col-m-12 col-5">
+        <div class="container">
+            {% if campaign.image %}
+            <div class="padding">
+                <span>{% trans "Image :" %}</span>
+                <div class="img-wrapper">
+                    <img class="img-responsive" src="{{SITE_HOST}}{{campaign.get_image_url}}" alt="{{campaign.name}}">
+                </div>
+            </div>
+            {% else %}
+            <div class="padding">
+                <span>{% trans "no images" %}</span>
+            </div>
+            {% endif %}
+        </div>
+    </div>
 </div>
 {% endblock CONTENT %}
