@@ -5,7 +5,5 @@ logger = logging.getLogger(__name__)
 
 
 def mailing_context(request):
-    context = {}
-    requestContext = RequestContext(request)
-    logger.info(f"mailing_context : {requestContext.dicts}")
+    context = {'mailing-version': '1.0.0'}
     return context
