@@ -1,5 +1,5 @@
-from django.template import RequestContext
-from django.template.loader import render_to_string
+from django.template import RequestContext, Template
+from django.template.loader import render_to_string, get_template
 from django.utils.translation import ugettext_lazy as _
 from django.core.exceptions import ObjectDoesNotExist
 from django.conf import settings
@@ -45,7 +45,7 @@ def update_campaign(campaign_uuid, postdata, files):
 def populate_with_required_context(request, context):
     MAILING_TEMPLATE_PROCESSORS = getattr(settings, MAILING_CONSTANTS.SETTINGS_MAILING_TEMPLATE_CONTEXTS)
     MAILING_TEMPLATE_CONTEXTS_KEYS = getattr(settings, MAILING_CONSTANTS.SETTINGS_MAILING_TEMPLATE_CONTEXTS_KEYS)
-    requestContext = RequestContext(request, processors=MAILING_TEMPLATE_PROCESSORS,)
+    requestContext = RequestContext(request, processors=MAILING_TEMPLATE_PROCESSORS)
     logger.info(f"Populating context with {MAILING_TEMPLATE_CONTEXTS_KEYS} - RequestContext : {requestContext} - PROCESSORS : {MAILING_TEMPLATE_PROCESSORS}")
     # for k in MAILING_TEMPLATE_CONTEXTS_KEYS:
     #     ck = requestContext[k]
@@ -53,11 +53,17 @@ def populate_with_required_context(request, context):
     #     context[k] = requestContext[k]
     context['SITE_NAME'] = settings.SITE_NAME
     context['SITE_HOST'] = settings.SITE_HOST
+    
     return context
 
-def generate_mail_campaign_html(campaign, context):
+def generate_mail_campaign_html(campaign, request):
     template_name = getattr(settings, MAILING_CONSTANTS.SETTINGS_DEFAULT_MAIL_TEMPLATE)
-    mail_html = render_to_string(template_name, context)
+    template = get_template(template_name)
+    MAILING_TEMPLATE_PROCESSORS = getattr(settings, MAILING_CONSTANTS.SETTINGS_MAILING_TEMPLATE_CONTEXTS)
+    MAILING_TEMPLATE_CONTEXTS_KEYS = getattr(settings, MAILING_CONSTANTS.SETTINGS_MAILING_TEMPLATE_CONTEXTS_KEYS)
+    requestContext = RequestContext(request,{'campaign': campaign}, processors=MAILING_TEMPLATE_PROCESSORS)
+    mail_html = template.render(requestContext)
+    #mail_html = render_to_string(template_name, context)
     with open(f"{campaign.slug}.html", 'w') as f:
         f.write(mail_html)
         logger.info(f" Mail Campaign {campaign.name} html file created")

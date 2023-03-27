@@ -217,8 +217,8 @@ def campaign_generate_html(request, campaign_uuid=None):
         context = {
             'campaign': campaign,
         }
-        mailing_service.populate_with_required_context(request, context)
-        mailing_service.generate_mail_campaign_html(campaign, context)
+        #mailing_service.populate_with_required_context(request, context)
+        mailing_service.generate_mail_campaign_html(campaign, request)
         messages.success(request, _('MailCampaign HTML not generated'))
     except Exception as e :
         messages.warning(request, _('MailCampaign HTML not generated'))
