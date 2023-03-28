@@ -143,7 +143,7 @@ def publish_scheduled_mail_campaigns():
     NOW = timezone.datetime.now()
     logger.info(f"Running publish_scheduled_mail_campaigns - current time : {NOW}")
     #Published Scheduled Product
-    SCHEDULED_FILTER = Q(scheduled_at__lte=NOW) & Q(is_active=True, published_status=MAILING_CONSTANTS.PUBLISHED_STATUS_SCHEDULED)
+    SCHEDULED_FILTER = Q(scheduled_at__lte=NOW) & Q(published_status=MAILING_CONSTANTS.PUBLISHED_STATUS_SCHEDULED)
     queryset = MailCampaign.objects.filter(SCHEDULED_FILTER)
     if not queryset.exists():
         return
