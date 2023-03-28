@@ -54,6 +54,7 @@ def send_mail_campaign_task(email_context=None):
                 return
             bcc_list = list(user_list.values_list('email', flat=True))
             email_message = EmailMessage(email_context['subject'], body=email_context['mail'],from_email=settings.DEFAULT_FROM_EMAIL,bcc=bcc_list)
+            email_message.content_subtype = MAILING_CONSTANTS.EMAIL_MESSAGE_CONTENT_TYPE
             email_message.send()
             # send_mail(
             #     email_context['title'],
