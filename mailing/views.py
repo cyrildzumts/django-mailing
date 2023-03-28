@@ -62,6 +62,7 @@ def campaign_create(request):
     context = {
         'page_title': page_title,
         'PUBLISHED_STATUS': MAILING_CONSTANTS.PUBLISHED_STATUS,
+        'PUBLISHED_STATUS_PUBLISHED': MAILING_CONSTANTS.PUBLISHED_STATUS_PUBLISHED,
     }
     form = None
     
@@ -120,6 +121,7 @@ def campaign_update(request, slug, campaign_uuid):
     context = {
         'page_title': page_title,
         'PUBLISHED_STATUS': MAILING_CONSTANTS.PUBLISHED_STATUS,
+        'PUBLISHED_STATUS_PUBLISHED': MAILING_CONSTANTS.PUBLISHED_STATUS_PUBLISHED,
     }
     form = None
     campaign = get_object_or_404(MailCampaign, slug=slug,campaign_uuid=campaign_uuid)

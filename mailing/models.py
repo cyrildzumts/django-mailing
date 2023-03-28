@@ -30,7 +30,6 @@ class MailCampaign(models.Model):
     published_at = models.DateTimeField(null=True, blank=True)
     scheduled_at = models.DateTimeField(null=True, blank=True)
     published_status = models.IntegerField(default=constants.PUBLISHED_STATUS_PUBLISHED,null=True, blank=True, choices=constants.PUBLISHED_STATUS)
-    schedule_status = models.IntegerField(default=constants.PUBLISHED_STATUS_PUBLISHED,null=True, blank=True, choices=constants.PUBLISHED_STATUS)
     campaign_uuid = models.UUIDField(default=uuid.uuid4, editable=False)
     FORM_FIELDS = ['name','key', 'headerText','bodyText','cta','target_link', 'description', 'image', 'added_by', 'published_status','schedule_status', 'scheduled_at', 'published_at']
 
