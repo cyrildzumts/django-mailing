@@ -1,0 +1,35 @@
+{% load i18n %}
+{% load mailing_tags %}
+
+<div class="activity-list-wrapper full">
+    <div class="padding title flex flex-left">
+        <span class="medium bold">{% trans list_title %}</span>
+    </div>
+    <div class="container">
+        <ul class="activity-list status-list js-filter-table full">
+            {% for mail_campaign in mail_campaign_list %}
+            <li class="activity mail">
+                <a class="full" href="{{mail_campaign.get_dashboard_url}}">
+                <div class="status-entry-wrapper">
+                    <div class="status-entry">
+                        <span class="bold margin-h" title="{{mail_campaign.name}}">{{mail_campaign.name}}</span><span class="mail-subject margin-h"><i class="fas fa-eye"></i>{{mail_campaign.view_count}}</span><span class="margin-h">{{mail_campaign.created_at}}</span>
+                    </div>
+                    <div class="status-entry">
+                        <span><i class="far fa-lightbulb"></i><span>{{mail_campaign.published_status|published_status_value}}</span></span><span><i class="far fa-clock"></i><span>{{mail_campaign.scheduled_at|default:'-/-'}}</span></span><span><i class="far fa-calender"></i><span>{{mail_campaign.published_at|default:'-/-'}}</span></span>
+                    </div>
+                </div>
+                </a>
+            </li>
+            {% empty %}
+            <li class="activity">
+                <div class="status-entry-wrapper">
+                    <div class="status-entry">
+                        <span class="bold">{% trans "No mail campaigns" %}</span>
+                    </div>
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% include "tags/pagination.html" with page_set=mail_campaign_list %}
+</div>

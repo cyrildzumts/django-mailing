@@ -63,6 +63,36 @@
                         
                         <div class="flex flex-left padding-l"> <span id="description-counter" class="char-counter">0</span><span class="text-max-length">/300</span></div>
                     </div>
+                    <div class="form-group-wrapper">
+                        <div class="form-group">
+                            <label class="bold" for="scheduled_at">{{UI_STRINGS_CONTEXT.UI_SCHEDULE_LABEL}}</label>
+                            <div class="flex flex-left margin-v flex-wrap">
+                                <input class="schedule" type="datetime-local" name="scheduled_at" id="scheduled_at">
+                                <span class="accordion-toggle" data-target="schedule-hint"><i class="fas fa-question-circle"></i></span>
+                            </div>
+                            <div id="schedule-hint" class="accordion margin-v mat-box">
+                                <div class="padding"><p class="small">{{UI_STRINGS_CONTEXT.UI_SCHEDULE_HINT}}</p></div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group published_status">
+                            <label for="published_status">{{UI_STRINGS_CONTEXT.UI_PUBLISHED_STATUS_LABEL}}</label>
+                            <select name="published_status" id="published_status" class="js-input-published_status">
+                                {% for k,v in PUBLISHED_STATUS %} 
+                                <option value="{{k}}" {% if k == PUBLISHED_STATUS_PUBLISHED %} selected{% endif %}>{{v}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group schedule_status">
+                            <label for="scheduled_status">{{UI_STRINGS_CONTEXT.UI_SCHEDULED_STATUS_LABEL}}</label>
+                            <select name="schedule_status" id="schedule_status" class="js-input-schedule_status">
+                                <option></option>
+                                {% for k,v in PUBLISHED_STATUS %} 
+                                <option value="{{k}}">{{v}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
                     <div class="actions flex-right">
                         <a class="mat-button mat-button-outline js-cancel" href="{%url 'mailing:campaigns'%}">{% trans "Cancel" %}</a>
                         <button class="mat-button mat-button-default" type="submit">{{UI_STRINGS_CONTEXT.UI_CAMPAIGN_CREATE_BTN_LABEL}}</button>

@@ -85,6 +85,43 @@
                         
                         <div class="flex flex-left padding-l"> <span id="description-counter" class="char-counter">0</span><span class="text-max-length">/300</span></div>
                     </div>
+                    <div class="form-group-wrapper">
+                        <div class="form-group">
+                            <label class="bold" for="scheduled_at">{{UI_STRINGS_CONTEXT.UI_SCHEDULE_LABEL}}</label>
+                            <div class="flex flex-left margin-v flex-wrap">
+                                <input class="schedule" type="datetime-local" name="scheduled_at" id="scheduled_at" value="{% if campaign.scheduled_at %}{{campaign.scheduled_at|date:'Y-m-d'}}T{{campaign.scheduled_at|time:'H:i:s'}}{% endif %}">
+                                <span class="accordion-toggle" data-target="schedule-hint"><i class="fas fa-question-circle"></i></span>
+                            </div>
+                            <div id="schedule-hint" class="accordion margin-v mat-box">
+                                <div class="padding"><p class="small">{{UI_STRINGS_CONTEXT.UI_SCHEDULE_HINT}}</p></div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group published_status">
+                            <div class="margin-v">
+                                <label for="published_status">{{UI_STRINGS_CONTEXT.UI_PUBLISHED_STATUS_LABEL}}</label>
+                            </div>
+                            <div class="margin-v">
+                                <select name="published_status" id="published_status" class="js-input-published_status">
+                                    {% for k,v in PUBLISHED_STATUS %} 
+                                    <option value="{{k}}" {% if k == campaign.published_status %} selected{% endif %}>{{v}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group schedule_status">
+                            <div class="margin-v">
+                                <label for="schedule_status">{{UI_STRINGS_CONTEXT.UI_SCHEDULED_STATUS_LABEL}}</label>
+                            </div>
+                            <div class="margin-v">
+                                <select name="schedule_status" id="schedule_status" class="js-input-schedule_status">
+                                    {% for k,v in PUBLISHED_STATUS %} 
+                                    <option value="{{k}}" {% if k == campaign.schedule_status %} selected{% endif %}>{{v}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
                     
                 </div><!--End of box-->
             </div>
