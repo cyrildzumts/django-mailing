@@ -61,6 +61,7 @@ def campaign_create(request):
         raise PermissionDenied
     context = {
         'page_title': page_title,
+        'PUBLISHED_STATUS': MailCampaignForm.PUBLISHED_STATUS,
     }
     form = None
     
@@ -118,6 +119,7 @@ def campaign_update(request, slug, campaign_uuid):
     page_title = UI_STRINGS.UI_MAIL_CAMPAIGN_UPDATE_PAGE_TITLE
     context = {
         'page_title': page_title,
+        'PUBLISHED_STATUS': MailCampaignForm.PUBLISHED_STATUS,
     }
     form = None
     campaign = get_object_or_404(MailCampaign, slug=slug,campaign_uuid=campaign_uuid)
