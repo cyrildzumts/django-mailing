@@ -44,9 +44,8 @@ def campaigns(request):
         list_set = None
         
     BASE_TEMPLATE = getattr(settings, MAILING_CONSTANTS.SETTINGS_BASE_TEMPLATE_INHERIT)
-    logger.info(f"Mailing Campaigns : BASE TEMPLATE : {BASE_TEMPLATE}")
     context['page_title'] = page_title
-    context['campaign_list'] = list_set
+    context['mail_campaign_list'] = list_set
     context['content_title'] = page_title
     context['BASE_TEMPLATE'] = getattr(settings, MAILING_CONSTANTS.SETTINGS_BASE_TEMPLATE_INHERIT)
     return render(request,template_name, context)
