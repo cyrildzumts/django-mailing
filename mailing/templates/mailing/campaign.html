@@ -32,6 +32,38 @@
                     <span><i class="far fa-lightbulb"></i><span>{{campaign.published_status|published_status_value}}</span></span><span><i class="far fa-clock"></i><span>{{campaign.scheduled_at|default:'-/-'}}</span></span><span><i class="far fa-calender"></i><span>{{campaign.published_at|default:'-/-'}}</span></span>
                 </div>
             </div>
+            <div class="status-entry-wrapper">
+                <div class="status-entry">
+                    <span class="bold margin-h" title="Target">{% translate "Target" %}</span>
+                </div>
+                <div class="status-entry">
+                    <a title="Target" href="{{campaign.target_link}}">{{campaign.target_link}}</a>
+                </div>
+            </div>
+            <div class="status-entry-wrapper">
+                <div class="status-entry">
+                    <span class="bold margin-h" title="Header Text">{% translate "Header Text" %}</span>
+                </div>
+                <div class="status-entry">
+                    <p>{{campaign.headerText}}</p>
+                </div>
+            </div>
+            <div class="status-entry-wrapper">
+                <div class="status-entry">
+                    <span class="bold margin-h" title="Body Text">{% translate "Body Text" %}</span>
+                </div>
+                <div class="status-entry">
+                    <p>{{campaign.bodyText}}</p>
+                </div>
+            </div>
+            <div class="status-entry-wrapper">
+                <div class="status-entry">
+                    <span class="bold margin-h" title="Description">{% translate "Description" %}</span>
+                </div>
+                <div class="status-entry">
+                    <p>{{campaign.description}}</p>
+                </div>
+            </div>
         </div><!--End of grid-->
     </div><!--End col-->
     <div class="col-m-12 col-3">
