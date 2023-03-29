@@ -160,7 +160,7 @@ def publish_scheduled_mail_campaigns():
             
         
     except Exception as e:
-        logger.warn(f"publish_scheduled_mail_campaigns : An exception occured while publishing Campaigns. Published campaigns : {sent_campaign_ids}")
+        logger.warn(f"publish_scheduled_mail_campaigns : An exception occured while publishing Campaigns. Published campaigns : {sent_campaign_ids} - Exception {e}", e)
         
         
     if len(sent_campaign_ids):
