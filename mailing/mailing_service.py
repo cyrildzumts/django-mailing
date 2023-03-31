@@ -104,6 +104,7 @@ def generate_standard_campaign(campaign, request):
 def generate_product_campaign(campaign, request):
     logger.info("generate_product_campaign")
     CAMPAIGN_MAPPING = getattr(settings, MAILING_CONSTANTS.SETTINGS_MAIL_CAMPAIGN_MAPPING)
+    logger.info(f"CAMPAIGN_MAPPING : {CAMPAIGN_MAPPING}")
     mapping = getattr(CAMPAIGN_MAPPING, str(campaign.campaign_type))
     logger.info(f"mapping : {mapping}")
     template_name = getattr(mapping, 'template')
