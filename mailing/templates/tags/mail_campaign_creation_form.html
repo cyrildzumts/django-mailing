@@ -40,6 +40,16 @@
                         </div>
                     </div>
                     <div class="form-group-wrapper">
+                        <div class="form-group">
+                            <span class="padding-bottom">{% trans "Campaign Type" %}</span>
+                            <div class="row">
+                                {% for k,v in CAMPAIGN_TYPES %} 
+                                <span class="padding"><input id="campaign-{{v}}" type="radio" name="campaign_type" value="{{k}}" {% if k == MAIL_CAMPAIGN_STANDARD %} checked {% endif %}> <label for="campaign-{{v}}">{{v}}</label></span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group-wrapper">
                         <div class="form-group full">
                             <label for="headerText">{% trans "Header Text" %}</label>
                             <input type="text" id="headerText" class="full" name="headerText" >

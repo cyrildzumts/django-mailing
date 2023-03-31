@@ -17,6 +17,10 @@ import csv
 logger = logging.getLogger(__name__)
 
 
+def splitify(a, n):
+    k, m = divmod(len(a), n)
+    return (a[i*k+min(i, m):(i+1)*k+min(i+1, m)] for i in range(n))
+
 
 
 def create_campaign(postdata, files):
@@ -63,6 +67,64 @@ def populate_with_required_context(request, context):
             raise Exception(msg)
     
     return template_context
+
+
+
+
+def generate_mail_campaign(campaign, request):
+    if campaign.campaign_type == MAILING_CONSTANTS.MAIL_CAMPAIGN_STANDARD:
+        generate_standard_campaign(campaign, request)
+        
+    elif campaign.campaign_type == MAILING_CONSTANTS.MAIL_CAMPAIGN_MULTIPLE_PRODUCT:
+        generate_product_campaign(campaign, request)
+        
+        
+
+def generate_standard_campaign(campaign, request):
+    CAMPAIGN_MAPPING = getattr(settings, MAILING_CONSTANTS.SETTINGS_MAIL_CAMPAIGN_MAPPING)
+    mapping = getattr(CAMPAIGN_MAPPING, campaign.campaign_type, {})
+    template_name = getattr(mapping, 'template', MAILING_CONSTANTS.SETTINGS_DEFAULT_MAIL_TEMPLATE)
+    context = populate_with_required_context(request,{'campaign': campaign, 'MAIL_TITLE': campaign.name})
+    mail_html = render_to_string(template_name, context)
+    if mail_html:
+        with open(f"{campaign.slug}.html", 'w') as f:
+            f.write(mail_html)
+            logger.info(f" Mail Campaign {campaign.name} html file created")
+        
+        email_context = {
+            'mail': mail_html,
+            'subject': campaign.name
+        }
+        tasks.send_mail_campaign_task.apply_async(args=[email_context])
+        
+        
+
+def generate_product_campaign(campaign, request):
+    CAMPAIGN_MAPPING = getattr(settings, MAILING_CONSTANTS.SETTINGS_MAIL_CAMPAIGN_MAPPING)
+    mapping = getattr(CAMPAIGN_MAPPING, campaign.campaign_type, {})
+    template_name = getattr(mapping, 'template')
+    mod_import = getattr(mapping, 'import')
+    mod_method = getattr(mapping, 'method')
+    context_name = getattr(mapping, 'context_name')
+    context = populate_with_required_context(request,{'campaign': campaign, 'MAIL_TITLE': campaign.name})
+    module = importlib.import_module(getattr(mapping, 'import'))
+    mail_html = None
+    if hasattr(module, mod_method):
+        callable = getattr(module, mod_method)
+        list_entries = callable()
+        context_var = list(splitify(list_entries, 4))
+        context[context_name] = context_var
+        mail_html = render_to_string(template_name, context)
+    if mail_html:
+        with open(f"{campaign.slug}.html", 'w') as f:
+            f.write(mail_html)
+            logger.info(f" Mail Campaign {campaign.name} html file created")
+        
+        email_context = {
+            'mail': mail_html,
+            'subject': campaign.name
+        }
+        tasks.send_mail_campaign_task.apply_async(args=[email_context])
 
 
 def generate_mail_campaign_html(campaign, request):
