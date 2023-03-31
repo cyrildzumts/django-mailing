@@ -65,7 +65,7 @@
                         <div class="form-group">
                             <span class="padding-bottom">{% trans "Campaign Type" %}</span>
                             <div class="row">
-                                {% for k,v in CAMPAIGN_TYPES %} 
+                                {% for k,v in MAIL_CAMPAIGN_TYPES %} 
                                 <span class="padding"><input id="campaign-{{v}}" type="radio" name="campaign_type" value="{{k}}" {% if k == campaign.campaign_type %} checked {% endif %}> <label for="campaign-{{v}}">{{v}}</label></span>
                                 {% endfor %}
                             </div>

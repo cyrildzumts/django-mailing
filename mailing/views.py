@@ -84,6 +84,8 @@ def campaign_create(request):
     context['DESCRIPTION_MAX_SIZE'] = MAILING_CONSTANTS.DESCRIPTION_MAX_SIZE
     context['content_title'] = page_title
     context['BASE_TEMPLATE'] = getattr(settings, MAILING_CONSTANTS.SETTINGS_BASE_TEMPLATE_INHERIT)
+    context['MAIL_CAMPAIGN_TYPES'] = MAILING_CONSTANTS.MAIL_CAMPAIGN_TYPES
+    context['MAIL_CAMPAIGN_STANDARD'] = MAILING_CONSTANTS.MAIL_CAMPAIGN_STANDARD
     return render(request, template_name, context)
 
 
@@ -141,6 +143,8 @@ def campaign_update(request, slug, campaign_uuid):
     context['campaign'] = campaign
     context['DESCRIPTION_MAX_SIZE'] = MAILING_CONSTANTS.DESCRIPTION_MAX_SIZE
     context['BASE_TEMPLATE'] = getattr(settings, MAILING_CONSTANTS.SETTINGS_BASE_TEMPLATE_INHERIT)
+    context['MAIL_CAMPAIGN_TYPES'] = MAILING_CONSTANTS.MAIL_CAMPAIGN_TYPES
+    context['MAIL_CAMPAIGN_STANDARD'] = MAILING_CONSTANTS.MAIL_CAMPAIGN_STANDARD
     return render(request, template_name, context)
 
 @login_required
