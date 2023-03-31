@@ -84,8 +84,8 @@ def generate_mail_campaign(campaign, request):
 def generate_standard_campaign(campaign, request):
     logger.info("generate_standard_campaign")
     CAMPAIGN_MAPPING = getattr(settings, MAILING_CONSTANTS.SETTINGS_MAIL_CAMPAIGN_MAPPING)
-    mapping = getattr(CAMPAIGN_MAPPING, campaign.campaign_type, {})
-    template_name = getattr(mapping, 'template', MAILING_CONSTANTS.SETTINGS_DEFAULT_MAIL_TEMPLATE)
+    mapping = CAMPAIGN_MAPPING[str(campaign.campaign_type)]
+    template_name = mapping['template']
     context = populate_with_required_context(request,{'campaign': campaign, 'MAIL_TITLE': campaign.name})
     mail_html = render_to_string(template_name, context)
     if mail_html:
@@ -105,14 +105,14 @@ def generate_product_campaign(campaign, request):
     logger.info("generate_product_campaign")
     CAMPAIGN_MAPPING = getattr(settings, MAILING_CONSTANTS.SETTINGS_MAIL_CAMPAIGN_MAPPING)
     logger.info(f"CAMPAIGN_MAPPING : {CAMPAIGN_MAPPING}")
-    mapping = getattr(CAMPAIGN_MAPPING, str(campaign.campaign_type))
+    mapping = CAMPAIGN_MAPPING[str(campaign.campaign_type)]
     logger.info(f"mapping : {mapping}")
-    template_name = getattr(mapping, 'template')
-    mod_import = getattr(mapping, 'import')
-    mod_method = getattr(mapping, 'method')
-    context_name = getattr(mapping, 'context_name')
+    template_name = mapping['template']
+    mod_import = mapping['import']
+    mod_method = mapping['method']
+    context_name = mapping['context_name']
     context = populate_with_required_context(request,{'campaign': campaign, 'MAIL_TITLE': campaign.name})
-    module = importlib.import_module(getattr(mapping, 'import'))
+    module = importlib.import_module(mapping['import'])
     mail_html = None
     if hasattr(module, mod_method):
         callable = getattr(module, mod_method)
