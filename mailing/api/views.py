@@ -55,7 +55,8 @@ def campaign_generate_mail(request, campaign_uuid=None):
     logger.info(f"API: send mail campaign request from user {username}")
     try:
         campaign = MailCampaign.objects.get(campaign_uuid=campaign_uuid)
-        mailing_service.send_mail_campaign(campaign, request)
+        #mailing_service.send_mail_campaign(campaign, request)
+        mailing_service.generate_mail_campaign(campaign, request)
         return Response(data={'success': True})
     except ObjectDoesNotExist as e:
         return Response(data={'success': False}, status=status.HTTP_404_NOT_FOUND)

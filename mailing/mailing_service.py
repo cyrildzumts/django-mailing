@@ -72,6 +72,7 @@ def populate_with_required_context(request, context):
 
 
 def generate_mail_campaign(campaign, request):
+    logger.info("generate_mail_campaign")
     if campaign.campaign_type == MAILING_CONSTANTS.MAIL_CAMPAIGN_STANDARD:
         generate_standard_campaign(campaign, request)
         
@@ -81,6 +82,7 @@ def generate_mail_campaign(campaign, request):
         
 
 def generate_standard_campaign(campaign, request):
+    logger.info("generate_standard_campaign")
     CAMPAIGN_MAPPING = getattr(settings, MAILING_CONSTANTS.SETTINGS_MAIL_CAMPAIGN_MAPPING)
     mapping = getattr(CAMPAIGN_MAPPING, campaign.campaign_type, {})
     template_name = getattr(mapping, 'template', MAILING_CONSTANTS.SETTINGS_DEFAULT_MAIL_TEMPLATE)
@@ -100,6 +102,7 @@ def generate_standard_campaign(campaign, request):
         
 
 def generate_product_campaign(campaign, request):
+    logger.info("generate_product_campaign")
     CAMPAIGN_MAPPING = getattr(settings, MAILING_CONSTANTS.SETTINGS_MAIL_CAMPAIGN_MAPPING)
     mapping = getattr(CAMPAIGN_MAPPING, str(campaign.campaign_type))
     logger.info(f"mapping : {mapping}")
