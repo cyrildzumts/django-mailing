@@ -2,6 +2,11 @@
 {% load i18n %}
 
 {% block CONTENT %}
+{% if perms.mailing.add_mailcampaign %}
+<div class="actions flex-left">
+    <a class="margin" href="{% url 'mailing:campaign-create'%}"> <i class="fas fa-plus icon"></i><span>{% trans "New Campaign" %}</span></a>
+</div>
+{% endif %}
 <div class="container">
         <div class="mat-box">
         {% include "tags/mail_campaigns_tag.html" with list_title=_('Mail Campaigns') %}
