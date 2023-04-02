@@ -27,7 +27,7 @@
                     <span class="bold margin-h" title="Target">{% translate "Type" %}</span>
                 </div>
                 <div class="status-entry">
-                    <p>{{campaign.campaign_type|mail_campaign_type}}</p>
+                    <p>{{campaign.campaign_type|mail_campaign_type|default:'-/-'}}</p>
                 </div>
             </div>
             <div class="status-entry-wrapper mat-box">
