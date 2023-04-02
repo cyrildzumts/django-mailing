@@ -19,3 +19,12 @@ def published_status_value(key):
         return key
     
     return v
+
+
+@register.filter
+def mail_campaign_type(key):
+    k,v = find_element_by_key_in_tuples(key, MAILING_CONSTANTS.MAIL_CAMPAIGN_TYPES)
+    if v is None:
+        return key
+    
+    return v
