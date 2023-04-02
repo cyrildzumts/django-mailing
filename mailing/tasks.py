@@ -215,7 +215,7 @@ def publish_scheduled_mail_campaigns():
     try:
         request = HttpRequest()
         template_context = build_required_context(request)
-        template_name = getattr(settings, MAILING_CONSTANTS.SETTINGS_DEFAULT_MAIL_TEMPLATE)
+        #template_name = getattr(settings, MAILING_CONSTANTS.SETTINGS_DEFAULT_MAIL_TEMPLATE)
         sent_campaign_ids = []
         for campaign in queryset:
             generate_mail_campaign(campaign, template_context)
