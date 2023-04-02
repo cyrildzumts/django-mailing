@@ -41,11 +41,13 @@ def build_required_context(request):
 
 def generate_mail_campaign(campaign, template_context):
     logger.info("generate_mail_campaign")
+    context = copy.deepcopy(template_context)
+    context.update({'campaign': campaign, 'MAIL_TITLE': campaign.name})
     if campaign.campaign_type == MAILING_CONSTANTS.MAIL_CAMPAIGN_STANDARD:
-        generate_standard_campaign(campaign, template_context)
+        generate_standard_campaign(campaign, context)
         
     elif campaign.campaign_type == MAILING_CONSTANTS.MAIL_CAMPAIGN_MULTIPLE_PRODUCT:
-        generate_product_campaign(campaign, template_context)
+        generate_product_campaign(campaign, context)
         
         
 
