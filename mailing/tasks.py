@@ -16,9 +16,14 @@ from mailing.models import MailCampaign
 
 logger = logging.getLogger(__name__)
 
+
+def splitify(a, n):
+    k, m = divmod(len(a), n)
+    return (a[i*k+min(i, m):(i+1)*k+min(i+1, m)] for i in range(n))
+
+
 def build_required_context(request):
     MAILING_TEMPLATE_PROCESSORS = getattr(settings, MAILING_CONSTANTS.SETTINGS_MAILING_TEMPLATE_CONTEXTS)
-    MAILING_TEMPLATE_CONTEXTS_KEYS = getattr(settings, MAILING_CONSTANTS.SETTINGS_MAILING_TEMPLATE_CONTEXTS_KEYS)
     template_context = {}
     processors = []
     for e in MAILING_TEMPLATE_PROCESSORS:
@@ -33,6 +38,62 @@ def build_required_context(request):
             raise Exception(msg)
     
     return template_context
+
+def generate_mail_campaign(campaign, template_context):
+    logger.info("generate_mail_campaign")
+    if campaign.campaign_type == MAILING_CONSTANTS.MAIL_CAMPAIGN_STANDARD:
+        generate_standard_campaign(campaign, template_context)
+        
+    elif campaign.campaign_type == MAILING_CONSTANTS.MAIL_CAMPAIGN_MULTIPLE_PRODUCT:
+        generate_product_campaign(campaign, template_context)
+        
+        
+
+def generate_standard_campaign(campaign, template_context):
+    logger.info("generate_standard_campaign")
+    CAMPAIGN_MAPPING = getattr(settings, MAILING_CONSTANTS.SETTINGS_MAIL_CAMPAIGN_MAPPING)
+    mapping = CAMPAIGN_MAPPING[str(campaign.campaign_type)]
+    template_name = mapping['template']
+    mail_html = render_to_string(template_name, template_context)
+    if mail_html:
+        with open(f"{campaign.slug}.html", 'w') as f:
+            f.write(mail_html)
+            logger.info(f" Mail Campaign {campaign.name} html file created")
+        
+        email_context = {
+            'mail': mail_html,
+            'subject': campaign.name
+        }
+        send_mail_campaign_task.apply_async(args=[email_context])
+        
+        
+
+def generate_product_campaign(campaign, template_context):
+    logger.info("generate_product_campaign")
+    CAMPAIGN_MAPPING = getattr(settings, MAILING_CONSTANTS.SETTINGS_MAIL_CAMPAIGN_MAPPING)
+    mapping = CAMPAIGN_MAPPING[str(campaign.campaign_type)]
+    template_name = mapping['template']
+    mod_import = mapping['import']
+    mod_method = mapping['method']
+    context_name = mapping['context_name']
+    module = importlib.import_module(mapping['import'])
+    mail_html = None
+    if hasattr(module, mod_method):
+        callable = getattr(module, mod_method)
+        list_entries = callable()
+        context_var = list(splitify(list_entries, 4))
+        template_context[context_name] = context_var
+        mail_html = render_to_string(template_name, template_context)
+    if mail_html:
+        with open(f"{campaign.slug}.html", 'w') as f:
+            f.write(mail_html)
+            logger.info(f" Mail Campaign {campaign.name} html file created")
+        
+        email_context = {
+            'mail': mail_html,
+            'subject': campaign.name
+        }
+        send_mail_campaign_task.apply_async(args=[email_context])
 
 def send_campaign_mail(campaign, template_context, template_name):
     context = copy.deepcopy(template_context)
@@ -155,7 +216,7 @@ def publish_scheduled_mail_campaigns():
         template_name = getattr(settings, MAILING_CONSTANTS.SETTINGS_DEFAULT_MAIL_TEMPLATE)
         sent_campaign_ids = []
         for campaign in queryset:
-            send_campaign_mail(campaign, template_context, template_name)
+            generate_mail_campaign(campaign, template_context)
             sent_campaign_ids.append(campaign.pk)
             
         
