@@ -150,6 +150,7 @@ def send_mail_campaign_task(email_context=None):
             email_message = EmailMessage(email_context['subject'], body=email_context['mail'],from_email=settings.DEFAULT_FROM_EMAIL,bcc=bcc_list)
             email_message.content_subtype = MAILING_CONSTANTS.EMAIL_MESSAGE_CONTENT_TYPE
             email_message.send()
+            logger.info(f"Sent campaign to {len(bcc_list)} users")
             # send_mail(
             #     email_context['title'],
             #     None,
