@@ -109,7 +109,6 @@ def generate_standard_campaign(campaign, request):
 def generate_product_campaign(campaign, request):
     logger.info("generate_product_campaign")
     CAMPAIGN_MAPPING = getattr(settings, MAILING_CONSTANTS.SETTINGS_MAIL_CAMPAIGN_MAPPING)
-    logger.info(f"CAMPAIGN_MAPPING : {CAMPAIGN_MAPPING}")
     mapping = CAMPAIGN_MAPPING[str(campaign.campaign_type)]
     logger.info(f"mapping : {mapping}")
     template_name = mapping['template']
@@ -134,7 +133,7 @@ def generate_product_campaign(campaign, request):
             list_entries = callable()
         context_var = list(splitify(list_entries, 4))
         context[context_name] = context_var
-        logger.info(f"generating Campaign Mail following context : {context}")
+        logger.info(f"generating Campaign Mail following context : context : {context_name} - context content : {context_var}")
         mail_html = render_to_string(template_name, context)
     if mail_html:
         with open(f"{campaign.slug}.html", 'w') as f:
