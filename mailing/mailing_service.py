@@ -72,22 +72,21 @@ def populate_with_required_context(request, context):
 
 
 
-def generate_mail_campaign(campaign, request):
+def generate_mail_campaign(campaign, request, send_mail=False):
     logger.info("generate_mail_campaign")
     try:
         if campaign.campaign_type == MAILING_CONSTANTS.MAIL_CAMPAIGN_STANDARD:
-            generate_standard_campaign(campaign, request)
+            generate_standard_campaign(campaign, request, send_mail)
             
         elif campaign.campaign_type == MAILING_CONSTANTS.MAIL_CAMPAIGN_MULTIPLE_PRODUCT:
-            generate_product_campaign(campaign, request)
+            generate_product_campaign(campaign, request, send_mail)
     
     except Exception as e:
         logger.error(f"Error on generation mail campaign for campaign {campaign}. Error : {e}")
         raise e
-        
-        
+             
 
-def generate_standard_campaign(campaign, request):
+def generate_standard_campaign(campaign, request, send_mail=False):
     logger.info("generate_standard_campaign")
     CAMPAIGN_MAPPING = getattr(settings, MAILING_CONSTANTS.SETTINGS_MAIL_CAMPAIGN_MAPPING)
     mapping = CAMPAIGN_MAPPING[str(campaign.campaign_type)]
@@ -99,15 +98,12 @@ def generate_standard_campaign(campaign, request):
             f.write(mail_html)
             logger.info(f" Mail Campaign {campaign.name} html file created")
         
-        email_context = {
-            'mail': mail_html,
-            'subject': campaign.name
-        }
-        tasks.send_mail_campaign_task.apply_async(args=[email_context])
+        if send_mail:
+            tasks.send_mail_campaign_task.apply_async(args=[{'mail': mail_html,'subject': campaign.name }])
         
         
 
-def generate_product_campaign(campaign, request):
+def generate_product_campaign(campaign, request, send_mail=False):
     logger.info("generate_product_campaign")
     CAMPAIGN_MAPPING = getattr(settings, MAILING_CONSTANTS.SETTINGS_MAIL_CAMPAIGN_MAPPING)
     mapping = CAMPAIGN_MAPPING[str(campaign.campaign_type)]
@@ -146,22 +142,24 @@ def generate_product_campaign(campaign, request):
             f.write(mail_html)
             logger.info(f" Mail Campaign {campaign.name} html file created")
         
-        email_context = {
-            'mail': mail_html,
-            'subject': campaign.name
-        }
-        tasks.send_mail_campaign_task.apply_async(args=[email_context])
+        if send_mail:
+            tasks.send_mail_campaign_task.apply_async(args=[{'mail': mail_html,'subject': campaign.name }])
         
 
 
 
 def generate_mail_campaign_html(campaign, request):
-    template_name = getattr(settings, MAILING_CONSTANTS.SETTINGS_DEFAULT_MAIL_TEMPLATE)
-    context = populate_with_required_context(request,{'campaign': campaign, 'MAIL_TITLE': campaign.name})
-    mail_html = render_to_string(template_name, context)
-    with open(f"{campaign.slug}.html", 'w') as f:
-        f.write(mail_html)
-        logger.info(f" Mail Campaign {campaign.name} html file created")
+    logger.info("generate_mail_campaign html")
+    try:
+        if campaign.campaign_type == MAILING_CONSTANTS.MAIL_CAMPAIGN_STANDARD:
+            generate_standard_campaign(campaign, request, False)
+            
+        elif campaign.campaign_type == MAILING_CONSTANTS.MAIL_CAMPAIGN_MULTIPLE_PRODUCT:
+            generate_product_campaign(campaign, request, False)
+    
+    except Exception as e:
+        logger.error(f"Error on generation of html for mail campaign {campaign}. Error : {e}")
+        raise e
         
         
 def send_mail_campaign(campaign, request):

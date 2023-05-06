@@ -198,8 +198,7 @@ def campaign_generate_mail(request, campaign_uuid=None):
     campaign = get_object_or_404(MailCampaign,campaign_uuid=campaign_uuid)
     
     try:
-        #mailing_service.send_mail_campaign(campaign, request)
-        mailing_service.generate_mail_campaign(campaign, request)
+        mailing_service.generate_mail_campaign(campaign, request, send_mail=True)
         messages.success(request, _('MailCampaign generated and sent'))
     except Exception as e :
         messages.warning(request, _('MailCampaign HTML not generated'))
@@ -218,7 +217,7 @@ def campaign_generate_html(request, campaign_uuid=None):
     campaign = get_object_or_404(MailCampaign,campaign_uuid=campaign_uuid)
     
     try:
-        mailing_service.generate_mail_campaign_html(campaign, request)
+        mailing_service.generate_mail_campaign(campaign, request)
         messages.success(request, _('MailCampaign HTML generated'))
     except Exception as e :
         messages.warning(request, _('MailCampaign HTML not generated'))
