@@ -24,11 +24,11 @@
             </div>
             <div class="status-entry-wrapper mat-box">
                 <div class="status-entry">
-                    <span class="bold margin-h" title="Target">{% translate "Type" %}</span><span>{{campaign.campaign_type|mail_campaign_type|default:'-/-'}}</span>
+                    <span class="bold margin-h" title="Target">{% translate "Type" %}</span><span class="margin-h">{{campaign.campaign_type|mail_campaign_type|default:'-/-'}}</span>
                 </div>
                 <div class="status-entry">
                     <span class="bold margin-h" title="Target Slug">{% translate "Target Slug" %}</span>
-                    <span>{{campaign.target_slug|default:'-/-'}}</span>
+                    <span class="margin-h">{{campaign.target_slug|default:'-/-'}}</span>
                 </div>
             </div>
             <div class="status-entry-wrapper mat-box">
