@@ -83,6 +83,7 @@ def generate_mail_campaign(campaign, request):
     
     except Exception as e:
         logger.error(f"Error on generation mail campaign for campaign {campaign}. Error : {e}")
+        raise e
         
         
 
