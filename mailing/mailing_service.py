@@ -134,6 +134,7 @@ def generate_product_campaign(campaign, request):
             list_entries = callable()
         context_var = list(splitify(list_entries, 4))
         context[context_name] = context_var
+        logger.info(f"generating Campaign Mail following context : {context}")
         mail_html = render_to_string(template_name, context)
     if mail_html:
         with open(f"{campaign.slug}.html", 'w') as f:
