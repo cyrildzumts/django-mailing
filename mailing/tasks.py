@@ -8,6 +8,7 @@ from celery import shared_task
 from django.template.loader import render_to_string
 from django.dispatch import receiver
 from django.conf import settings
+from mailing import mailing_tools
 from mailing import constants as MAILING_CONSTANTS
 import logging
 import copy
@@ -39,63 +40,7 @@ def build_required_context(request):
     
     return template_context
 
-def generate_mail_campaign(campaign, template_context):
-    logger.info("generate_mail_campaign")
-    context = copy.deepcopy(template_context)
-    context.update({'campaign': campaign, 'MAIL_TITLE': campaign.name})
-    if campaign.campaign_type == MAILING_CONSTANTS.MAIL_CAMPAIGN_STANDARD:
-        generate_standard_campaign(campaign, context)
-        
-    elif campaign.campaign_type == MAILING_CONSTANTS.MAIL_CAMPAIGN_MULTIPLE_PRODUCT:
-        generate_product_campaign(campaign, context)
-        
-        
-
-def generate_standard_campaign(campaign, template_context):
-    logger.info("generate_standard_campaign")
-    CAMPAIGN_MAPPING = getattr(settings, MAILING_CONSTANTS.SETTINGS_MAIL_CAMPAIGN_MAPPING)
-    mapping = CAMPAIGN_MAPPING[str(campaign.campaign_type)]
-    template_name = mapping['template']
-    mail_html = render_to_string(template_name, template_context)
-    if mail_html:
-        with open(f"{campaign.slug}.html", 'w') as f:
-            f.write(mail_html)
-            logger.info(f" Mail Campaign {campaign.name} html file created")
-        
-        email_context = {
-            'mail': mail_html,
-            'subject': campaign.name
-        }
-        send_mail_campaign_task.apply_async(args=[email_context])
-        
-        
-
-def generate_product_campaign(campaign, template_context):
-    logger.info("generate_product_campaign")
-    CAMPAIGN_MAPPING = getattr(settings, MAILING_CONSTANTS.SETTINGS_MAIL_CAMPAIGN_MAPPING)
-    mapping = CAMPAIGN_MAPPING[str(campaign.campaign_type)]
-    template_name = mapping['template']
-    mod_import = mapping['import']
-    mod_method = mapping['method']
-    context_name = mapping['context_name']
-    module = importlib.import_module(mapping['import'])
-    mail_html = None
-    if hasattr(module, mod_method):
-        callable = getattr(module, mod_method)
-        list_entries = callable()
-        context_var = list(splitify(list_entries, 4))
-        template_context[context_name] = context_var
-        mail_html = render_to_string(template_name, template_context)
-    if mail_html:
-        with open(f"{campaign.slug}.html", 'w') as f:
-            f.write(mail_html)
-            logger.info(f" Mail Campaign {campaign.name} html file created")
-        
-        email_context = {
-            'mail': mail_html,
-            'subject': campaign.name
-        }
-        send_mail_campaign_task.apply_async(args=[email_context])
+    
 
 def send_campaign_mail(campaign, template_context, template_name):
     context = copy.deepcopy(template_context)
@@ -213,20 +158,19 @@ def publish_scheduled_mail_campaigns():
         return
     
     sent_campaign_ids = []
-    try:
-        request = HttpRequest()
-        template_context = build_required_context(request)
-        #template_name = getattr(settings, MAILING_CONSTANTS.SETTINGS_DEFAULT_MAIL_TEMPLATE)
-        sent_campaign_ids = []
-        for campaign in queryset:
-            generate_mail_campaign(campaign, template_context)
+
+    request = HttpRequest()
+    #template_context = build_required_context(request)
+    #template_name = getattr(settings, MAILING_CONSTANTS.SETTINGS_DEFAULT_MAIL_TEMPLATE)
+    for campaign in queryset:
+        try:
+            mail_context = mailing_tools.generate_mail_campaign_template(campaign, request, True)
+            send_mail_campaign_task.apply_async(args=[mail_context])
             sent_campaign_ids.append(campaign.pk)
+        
+        except Exception as e:
+            logger.error(f"Error on generation mail campaign for campaign {campaign}. Error : {e}")
             
-        
-    except Exception as e:
-        logger.warn(f"publish_scheduled_mail_campaigns : An exception occured while publishing Campaigns. Published campaigns : {sent_campaign_ids} - Exception {e}", e)
-        
-        
     if len(sent_campaign_ids):
         a = queryset.filter(id__in=sent_campaign_ids).update(published_status=MAILING_CONSTANTS.PUBLISHED_STATUS_PUBLISHED, published_at=NOW)
         logger.info(f"MailCampaign SCHEDULED TASK: Published {a} scheduled campaigns")

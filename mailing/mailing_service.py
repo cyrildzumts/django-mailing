@@ -8,6 +8,7 @@ from django.db.models import F
 from django.conf import settings
 from mailing.models import MailCampaign
 from mailing.forms import MailCampaignForm
+from mailing import mailing_tools
 from mailing import constants as MAILING_CONSTANTS, tasks
 
 import importlib
@@ -75,11 +76,8 @@ def populate_with_required_context(request, context):
 def generate_mail_campaign(campaign, request, send_mail=False):
     logger.info("generate_mail_campaign")
     try:
-        if campaign.campaign_type == MAILING_CONSTANTS.MAIL_CAMPAIGN_STANDARD:
-            generate_standard_campaign(campaign, request, send_mail)
-            
-        elif campaign.campaign_type == MAILING_CONSTANTS.MAIL_CAMPAIGN_MULTIPLE_PRODUCT:
-            generate_product_campaign(campaign, request, send_mail)
+        mail_context = mailing_tools.generate_mail_campaign_template(campaign, request, send_mail)
+        tasks.send_mail_campaign_task.apply_async(args=[mail_context])
     
     except Exception as e:
         logger.error(f"Error on generation mail campaign for campaign {campaign}. Error : {e}")
