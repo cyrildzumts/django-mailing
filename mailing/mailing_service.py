@@ -82,7 +82,7 @@ def generate_mail_campaign(campaign, request):
             generate_product_campaign(campaign, request)
     
     except Exception as e:
-        logger.error(f"Error on generation mail campaign for campaign {campaign}")
+        logger.error(f"Error on generation mail campaign for campaign {campaign}. Error : {e}")
         
         
 
@@ -127,7 +127,7 @@ def generate_product_campaign(campaign, request):
             arg = getattr(campaign, argument)
             if arg is None or arg == "":
                 logger.warn(f"campaign {campaign} arg is empty : {arg}. Campaign not generated.")
-                return
+                raise Exception(f"Campagin Mail not sent. setting \"argument\" is missing or invalid")
             list_entries = callable(arg)
         else:
             list_entries = callable()
@@ -136,7 +136,7 @@ def generate_product_campaign(campaign, request):
         else:
             context_var = None
             logger.warning(f"No context var found  for campaign {campaign}. List entries is empty")
-            return
+            raise Exception(f"Campagin Mail not sent. No Context products is empty.")
         context[context_name] = context_var
         logger.info(f"generating Campaign Mail following context : context : {context_name} - context content : {context_var}")
         mail_html = render_to_string(template_name, context)
