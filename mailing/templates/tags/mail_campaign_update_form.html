@@ -50,6 +50,9 @@
                             <label for="key">{% trans "Key" %}</label>
                             <input type="text" id="key" class="full" name="key" value="{{campaign.key}}">
                         </div>
+                        
+                    </div>
+                    <div class="form-group-wrapper">
                         <div class="form-group">
                             <label for="target_slug">{% trans "Target Slug" %}</label>
                             <input type="text" id="target_slug" class="full" name="target_slug" value="{{campaign.target_slug|default:''}}">
