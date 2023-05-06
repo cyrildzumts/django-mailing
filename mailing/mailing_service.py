@@ -1,4 +1,6 @@
 from django.template import RequestContext, Template
+from django.db import models
+from django.apps import apps
 from django.template.loader import render_to_string, get_template
 from django.utils.translation import ugettext_lazy as _
 from django.core.exceptions import ObjectDoesNotExist
@@ -72,11 +74,15 @@ def populate_with_required_context(request, context):
 
 def generate_mail_campaign(campaign, request):
     logger.info("generate_mail_campaign")
-    if campaign.campaign_type == MAILING_CONSTANTS.MAIL_CAMPAIGN_STANDARD:
-        generate_standard_campaign(campaign, request)
-        
-    elif campaign.campaign_type == MAILING_CONSTANTS.MAIL_CAMPAIGN_MULTIPLE_PRODUCT:
-        generate_product_campaign(campaign, request)
+    try:
+        if campaign.campaign_type == MAILING_CONSTANTS.MAIL_CAMPAIGN_STANDARD:
+            generate_standard_campaign(campaign, request)
+            
+        elif campaign.campaign_type == MAILING_CONSTANTS.MAIL_CAMPAIGN_MULTIPLE_PRODUCT:
+            generate_product_campaign(campaign, request)
+    
+    except Exception as e:
+        logger.error(f"Error on generation mail campaign for campaign {campaign}")
         
         
 
@@ -109,13 +115,23 @@ def generate_product_campaign(campaign, request):
     template_name = mapping['template']
     mod_import = mapping['import']
     mod_method = mapping['method']
+    argument = mapping['argument']
     context_name = mapping['context_name']
+    
     context = populate_with_required_context(request,{'campaign': campaign, 'MAIL_TITLE': campaign.name})
-    module = importlib.import_module(mapping['import'])
+    module = importlib.import_module(mod_import)
     mail_html = None
+    
     if hasattr(module, mod_method):
         callable = getattr(module, mod_method)
-        list_entries = callable()
+        if argument:
+            arg = getattr(campaign, argument)
+            if arg is None or arg == "":
+                logger.warn(f"campaign {campaign} arg is empty : {arg}. Campaign not generated.")
+                return
+            list_entries = callable(arg)
+        else:
+            list_entries = callable()
         context_var = list(splitify(list_entries, 4))
         context[context_name] = context_var
         mail_html = render_to_string(template_name, context)
@@ -129,6 +145,8 @@ def generate_product_campaign(campaign, request):
             'subject': campaign.name
         }
         tasks.send_mail_campaign_task.apply_async(args=[email_context])
+        
+
 
 
 def generate_mail_campaign_html(campaign, request):

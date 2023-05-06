@@ -3,6 +3,8 @@ from django.contrib.auth.models import User
 from django.urls import reverse
 from django.utils.text import slugify
 from mailing.resources import ui_strings as UI_STRINGS
+from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.models import ContentType
 from mailing import constants
 import uuid
 
@@ -26,13 +28,14 @@ class MailCampaign(models.Model):
     last_changed_at = models.DateTimeField(auto_now=True)
     image = models.ImageField(upload_to=upload_campaign_to, blank=True, null=True)
     slug = models.SlugField(max_length=250, blank=True, null=True)
+    target_slug = models.SlugField(max_length=250, blank=True, null=True)
     view_count = models.IntegerField(blank=True, null=True, default=0)
     published_at = models.DateTimeField(null=True, blank=True)
     scheduled_at = models.DateTimeField(null=True, blank=True)
     published_status = models.IntegerField(default=constants.PUBLISHED_STATUS_PUBLISHED,null=True, blank=True, choices=constants.PUBLISHED_STATUS)
     campaign_type = models.IntegerField(default=constants.MAIL_CAMPAIGN_STANDARD, blank=True, null=True, choices=constants.MAIL_CAMPAIGN_TYPES)
     campaign_uuid = models.UUIDField(default=uuid.uuid4, editable=False)
-    FORM_FIELDS = ['name','key', 'headerText','bodyText','cta','target_link', 'description', 'image', 'added_by', 'published_status', 'scheduled_at', 'published_at', 'campaign_type']
+    FORM_FIELDS = ['name','key', 'target_slug', 'headerText','bodyText','cta','target_link', 'description', 'image', 'added_by', 'published_status', 'scheduled_at', 'published_at', 'campaign_type']
 
     DATATABLE_ACTIONS = ['open','update','delete']
     
