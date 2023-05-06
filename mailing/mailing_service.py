@@ -131,7 +131,12 @@ def generate_product_campaign(campaign, request):
             list_entries = callable(arg)
         else:
             list_entries = callable()
-        context_var = list(splitify(list_entries, 4))
+        if list_entries:
+            context_var = list(splitify(list_entries, 4))
+        else:
+            context_var = None
+            logger.warning(f"No context var found  for campaign {campaign}. List entries is empty")
+            return
         context[context_name] = context_var
         logger.info(f"generating Campaign Mail following context : context : {context_name} - context content : {context_var}")
         mail_html = render_to_string(template_name, context)
