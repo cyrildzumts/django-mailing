@@ -76,8 +76,14 @@ def populate_with_required_context(request, context):
 def generate_mail_campaign(campaign, request, send_mail=False):
     logger.info("generate_mail_campaign")
     try:
-        mail_context = mailing_tools.generate_mail_campaign_template(campaign, request, send_mail)
-        tasks.send_mail_campaign_task.apply_async(args=[mail_context])
+        mail_context = mailing_tools.generate_mail_campaign_template(campaign, request)
+        mail_html = mail_context['mail_html']
+        if mail_html:
+            with open(f"{MAILING_CONSTANTS.MAILING_DIR}/{campaign.key}/{campaign.key}.html", 'w') as f:
+                f.write(mail_html)
+                logger.info(f" Mail Campaign {campaign.name} html file created")
+            if send_mail:
+                tasks.send_mail_campaign_task.apply_async(args=[mail_context])
     
     except Exception as e:
         logger.error(f"Error on generation mail campaign for campaign {campaign}. Error : {e}")

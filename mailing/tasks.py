@@ -160,11 +160,14 @@ def publish_scheduled_mail_campaigns():
     sent_campaign_ids = []
 
     request = HttpRequest()
-    #template_context = build_required_context(request)
-    #template_name = getattr(settings, MAILING_CONSTANTS.SETTINGS_DEFAULT_MAIL_TEMPLATE)
     for campaign in queryset:
         try:
-            mail_context = mailing_tools.generate_mail_campaign_template(campaign, request, True)
+            mail_context = mailing_tools.generate_mail_campaign_template(campaign, request)
+            mail_html = mail_context['mail_html']
+            if mail_html:
+                with open(f"{MAILING_CONSTANTS.MAILING_DIR}/{campaign.key}/{campaign.key}.html", 'w') as f:
+                    f.write(mail_html)
+                    logger.info(f" Mail Campaign {campaign.name} html file created")
             send_mail_campaign_task.apply_async(args=[mail_context])
             sent_campaign_ids.append(campaign.pk)
         

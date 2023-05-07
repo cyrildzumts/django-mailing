@@ -37,21 +37,21 @@ def populate_with_required_context(request, context):
 
 
 
-def generate_mail_campaign_template(campaign, request, send_mail=False):
+def generate_mail_campaign_template(campaign, request):
     logger.info("generate_mail_campaign")
     try:
         if campaign.campaign_type == MAILING_CONSTANTS.MAIL_CAMPAIGN_STANDARD:
-            return generate_standard_campaign_template(campaign, request, send_mail)
+            return generate_standard_campaign_template(campaign, request)
             
         elif campaign.campaign_type == MAILING_CONSTANTS.MAIL_CAMPAIGN_MULTIPLE_PRODUCT:
-            return generate_product_campaign_template(campaign, request, send_mail)
+            return generate_product_campaign_template(campaign, request)
     
     except Exception as e:
         logger.error(f"Error on generation mail campaign for campaign {campaign}. Error : {e}")
         raise e
              
 
-def generate_standard_campaign_template(campaign, request, send_mail=False):
+def generate_standard_campaign_template(campaign, request):
     logger.info("generate_standard_campaign")
     CAMPAIGN_MAPPING = getattr(settings, MAILING_CONSTANTS.SETTINGS_MAIL_CAMPAIGN_MAPPING)
     mapping = CAMPAIGN_MAPPING[str(campaign.campaign_type)]
@@ -63,7 +63,7 @@ def generate_standard_campaign_template(campaign, request, send_mail=False):
         
         
 
-def generate_product_campaign_template(campaign, request, send_mail=False):
+def generate_product_campaign_template(campaign, request):
     logger.info("generate_product_campaign")
     CAMPAIGN_MAPPING = getattr(settings, MAILING_CONSTANTS.SETTINGS_MAIL_CAMPAIGN_MAPPING)
     mapping = CAMPAIGN_MAPPING[str(campaign.campaign_type)]
