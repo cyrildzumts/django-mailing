@@ -163,7 +163,7 @@ def publish_scheduled_mail_campaigns():
     for campaign in queryset:
         try:
             mail_context = mailing_tools.generate_mail_campaign_template(campaign, request)
-            mail_html = mail_context['mail_html']
+            mail_html = mail_context['mail']
             if mail_html:
                 with open(f"{MAILING_CONSTANTS.MAILING_DIR}/{campaign.key}/{campaign.key}.html", 'w') as f:
                     f.write(mail_html)
