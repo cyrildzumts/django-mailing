@@ -2,7 +2,7 @@ from django.template import RequestContext, Template
 from django.db import models
 from django.apps import apps
 from django.template.loader import render_to_string, get_template
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import F
 from django.conf import settings

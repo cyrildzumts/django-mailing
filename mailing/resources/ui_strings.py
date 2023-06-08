@@ -1,4 +1,4 @@
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 UI_MAIL_CAMPAIGN_LIST_PAGE_TITLE = _('Mail Campaigns')
 UI_MAIL_CAMPAIGN_PAGE_TITLE = _('Mail Campaign')

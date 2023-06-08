@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from django.shortcuts import render, get_object_or_404, redirect
 from django.core.exceptions import PermissionDenied, SuspiciousOperation, ObjectDoesNotExist
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.models import User, Group, Permission
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib import messages
